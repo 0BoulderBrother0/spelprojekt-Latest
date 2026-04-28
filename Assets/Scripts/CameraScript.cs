@@ -15,8 +15,8 @@ public class CameraScript : MonoBehaviour
     {
         cam = Camera.main;
 
-        screenHeight = screenWidth * cam.aspect;
-        screenWidth = cam.orthographicSize;
+        screenHeight = cam.orthographicSize;
+        screenWidth = screenHeight * cam.aspect;
     }
 
     // Update is called once per frame
