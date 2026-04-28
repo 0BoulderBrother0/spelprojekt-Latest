@@ -23,15 +23,9 @@ public class PlayerScript : MonoBehaviour
 
         rb.linearVelocityX = xAxis * moveSpeed;
 
-        if (Input.GetKeyDown(KeyCode.Space) && GroundCheckScript.isOnGround && hasJumped == false)
+        if (Input.GetKeyDown(KeyCode.Space) && GroundCheckScript.isOnGround)
         {
             rb.linearVelocityY = jumpHeight;
-            hasJumped = true;
-        }
-
-        if (GroundCheckScript.isOnGround == false)
-        {
-            hasJumped = false;
         }
     }
 
