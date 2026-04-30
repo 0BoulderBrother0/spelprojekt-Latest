@@ -44,7 +44,7 @@ public class PlatformManagerScript : MonoBehaviour
             float platformPositionX = Random.Range(-CameraScript.screenWidth + platformHeight, CameraScript.screenWidth - platformHeight);
             Debug.Log(platformPositionX);
 
-            Instantiate(platformObject, new Vector2(platformPositionX, CameraScript.screenHeight - platformHeight + Camera.main.transform.position.y), Quaternion.identity);
+            Instantiate(platformObject, new Vector2(platformPositionX, CameraScript.screenHeight + platformHeight + Camera.main.transform.position.y), Quaternion.identity);
 
             yield return new WaitForSeconds(interval);
         }

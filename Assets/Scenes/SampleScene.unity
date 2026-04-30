@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   platformObject: {fileID: 3389522379096500041, guid: 6208559abeca3c74394752206275920f, type: 3}
-  interval: 12
+  interval: 8
 --- !u!4 &26548572
 Transform:
   m_ObjectHideFlags: 0
@@ -372,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b51f0db2ff01a9441855fd360f0d9817, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  cameraSpeed: 0.05
+  cameraSpeed: 0.6
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,10 +675,6 @@ PrefabInstance:
     - target: {fileID: 2711179667966268172, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: jumpHeight
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name

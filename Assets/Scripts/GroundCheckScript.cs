@@ -17,19 +17,23 @@ public class GroundCheckScript : MonoBehaviour
         
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Ground"))
-        {
-            isOnGround = true;
-        }
-    }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Ground"))
         {
             isOnGround = false;
+            PlayerScript.touchedGround = false;
+            Debug.Log($"isOnGround: {isOnGround}");
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Ground"))
+        {
+            isOnGround = true;
+            Debug.Log($"isOnGround: {isOnGround}");
+            
         }
     }
 }
