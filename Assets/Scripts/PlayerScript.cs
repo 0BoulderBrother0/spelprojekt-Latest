@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 
 public class PlayerScript : MonoBehaviour
 {
+    // Hejsan
     Rigidbody2D rb;
     float xAxis;
     bool hasJumped;
