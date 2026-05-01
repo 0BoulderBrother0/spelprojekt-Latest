@@ -9,7 +9,7 @@ public class PlatformManagerScript : MonoBehaviour
     
     SpriteRenderer[] srArray;
     float platformHeight;
-    Coroutine spawnPlatforms;
+    float platformWidth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +20,8 @@ public class PlatformManagerScript : MonoBehaviour
         // Tar största längden hittad mellan alla segment
         foreach (SpriteRenderer sr in srArray)
         {
+            platformWidth += sr.bounds.extents.x;
+
             if (sr.bounds.extents.y > platformHeight)
             {
                 platformHeight = sr.bounds.extents.y;
@@ -27,7 +29,7 @@ public class PlatformManagerScript : MonoBehaviour
         }
 
 
-        spawnPlatforms = StartCoroutine(SpawnPlatforms());
+        StartCoroutine(SpawnPlatforms());
         
     }
 
@@ -41,7 +43,7 @@ public class PlatformManagerScript : MonoBehaviour
     {
         while (true)
         {
-            float platformPositionX = Random.Range(-CameraScript.screenWidth + platformHeight, CameraScript.screenWidth - platformHeight);
+            float platformPositionX = Random.Range(-CameraScript.screenWidth + platformWidth, CameraScript.screenWidth - platformWidth);
             Debug.Log(platformPositionX);
 
             Instantiate(platformObject, new Vector2(platformPositionX, CameraScript.screenHeight + platformHeight + Camera.main.transform.position.y), Quaternion.identity);

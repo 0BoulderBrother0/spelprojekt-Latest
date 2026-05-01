@@ -52,5 +52,10 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        
+    }
+
 
 }
