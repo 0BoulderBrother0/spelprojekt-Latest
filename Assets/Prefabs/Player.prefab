@@ -270,6 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfce3eef8a3bdbc46861f921adf23405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  platformHelpDistance: 0.25
+  platformDistanceBuffer: 0.1
   moveSpeed: 4
   jumpHeight: 10
   airKoefficient: 0.5

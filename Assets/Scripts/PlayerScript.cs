@@ -4,13 +4,19 @@ using UnityEngine.Rendering;
 public class PlayerScript : MonoBehaviour
 {
     Rigidbody2D rb;
+    SpriteRenderer sr;
     float xAxis;
+    float playerHeight;
+    float playerWidth;
+
     public static bool hasJumped;
     public static bool touchedGround;
-
     public static float velocityThreshold = -1;
 
-    [Header("speed")]
+    public float platformHelpDistance;
+    public float platformDistanceBuffer;
+
+    [Header("Speed")]
     public float moveSpeed;
     public float jumpHeight;
     public float airKoefficient = 0.1f;
@@ -19,6 +25,10 @@ public class PlayerScript : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+
+        playerHeight = sr.bounds.extents.y;
+        playerWidth = sr.bounds.extents.x;
     }
 
     // Update is called once per frame
@@ -52,10 +62,24 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnCollisionStay2D(Collision2D collision)
+{
+    if (collision.collider.CompareTag("Ground"))
     {
-        
+        Vector2 playerPos = transform.position;
+        Vector2 platformPos = collision.collider.transform.position;
+
+        float platformTop = collision.collider.bounds.max.y;
+        float platformWidth = collision.collider.bounds.extents.x;
+
+
+        if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight + platformDistanceBuffer < platformTop && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
+        {
+            Debug.Log("Triggered platform help!");
+            transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
+        }
     }
+}
 
 
 }

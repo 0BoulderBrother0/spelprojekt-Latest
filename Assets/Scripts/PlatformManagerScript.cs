@@ -6,10 +6,10 @@ public class PlatformManagerScript : MonoBehaviour
     public GameObject platformObject;
     public float interval;
 
-    
+
     SpriteRenderer[] srArray;
-    float platformHeight;
-    float platformWidth;
+    public float platformHeight;
+    public float platformWidth;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,26 +17,24 @@ public class PlatformManagerScript : MonoBehaviour
 
         srArray = platformObject.GetComponentsInChildren<SpriteRenderer>();
 
-        // Tar största längden hittad mellan alla segment
+        // Start with the first sprite's bounds, then expand to include the rest
+        Bounds totalBounds = srArray[0].bounds;
         foreach (SpriteRenderer sr in srArray)
         {
-            platformWidth += sr.bounds.extents.x;
-
-            if (sr.bounds.extents.y > platformHeight)
-            {
-                platformHeight = sr.bounds.extents.y;
-            }
+            totalBounds.Encapsulate(sr.bounds);
         }
 
+        platformWidth = totalBounds.extents.x;
+        platformHeight = totalBounds.extents.y;
 
         StartCoroutine(SpawnPlatforms());
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     IEnumerator SpawnPlatforms()
