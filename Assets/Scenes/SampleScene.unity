@@ -336,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4452119875022108604, guid: 6208559abeca3c74394752206275920f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.3
+      value: 5.9
       objectReference: {fileID: 0}
     - target: {fileID: 4452119875022108604, guid: 6208559abeca3c74394752206275920f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -477,7 +477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4452119875022108604, guid: 6208559abeca3c74394752206275920f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.33
+      value: 7.72
       objectReference: {fileID: 0}
     - target: {fileID: 4452119875022108604, guid: 6208559abeca3c74394752206275920f, type: 3}
       propertyPath: m_LocalPosition.z
@@ -563,6 +563,34 @@ PrefabInstance:
     - target: {fileID: 2711179667966268172, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: moveSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: airKoefficient
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: groundKoefficient
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: platformHelpBoost
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: velocityThreshold
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: platformHelpDistance
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: platformDistanceBuffer
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name

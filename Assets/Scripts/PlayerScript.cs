@@ -10,11 +10,15 @@ public class PlayerScript : MonoBehaviour
     float playerWidth;
 
     public static bool hasJumped;
-    public static bool touchedGround;
-    public static float velocityThreshold = -1;
 
+
+    public float SecondsDisabledIsOnGround = 1;
+    float secondsSinceJump;
+
+    [Header("Platform Help")]
     public float platformHelpDistance;
     public float platformDistanceBuffer;
+    public float platformHelpBoost = 3;
 
     [Header("Speed")]
     public float moveSpeed;
@@ -36,30 +40,35 @@ public class PlayerScript : MonoBehaviour
     {
         xAxis = Input.GetAxisRaw("Horizontal");
 
-        if (GroundCheckScript.isOnGround && rb.linearVelocityY < velocityThreshold && !touchedGround)
+        secondsSinceJump += Time.deltaTime;
+        
+
+        if (GroundCheckScript.isOnGround && SecondsDisabledIsOnGround <= secondsSinceJump)
         {
             hasJumped = false;
-            touchedGround = true;
+            //touchedGround = true;
             Debug.Log($"hasJumped: {hasJumped}");
 
-            rb.linearVelocityX = rb.linearVelocityX * groundKoefficient;
+            rb.linearVelocityX = rb.linearVelocityX * groundKoefficient * Time.deltaTime;
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
         {
+            secondsSinceJump = 0;
             hasJumped = true;
             Debug.Log($"hasJumped: {hasJumped}");
 
             rb.linearVelocityY = jumpHeight;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
-            Debug.Log($"Force before air: {xAxis * moveSpeed}");
+            //Debug.Log($"Force before air: {xAxis * moveSpeed}");
         }
 
         if (hasJumped)
         {
-            rb.AddForceX(xAxis * moveSpeed * airKoefficient, ForceMode2D.Force);
-            Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
+            rb.AddForceX(xAxis * moveSpeed * airKoefficient * Time.deltaTime, ForceMode2D.Force);
+            //Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
         }
+        
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -76,7 +85,8 @@ public class PlayerScript : MonoBehaviour
         if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight + platformDistanceBuffer < platformTop && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
         {
             Debug.Log("Triggered platform help!");
-            transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
+            //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
+            rb.AddForceY(platformTop + playerHeight + platformHelpBoost - playerPos.y);
         }
     }
 }

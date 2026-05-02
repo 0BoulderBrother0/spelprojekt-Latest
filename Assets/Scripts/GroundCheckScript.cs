@@ -22,7 +22,6 @@ public class GroundCheckScript : MonoBehaviour
         if (collision.CompareTag("Ground"))
         {
             isOnGround = false;
-            PlayerScript.touchedGround = false;
             Debug.Log($"isOnGround: {isOnGround}");
         }
     }
