@@ -5,9 +5,12 @@ public class PlayerScript : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sr;
+    PlatformManagerScript pms;
+    Collider2D currentPlatformCollider;
     float xAxis;
     float playerHeight;
     float playerWidth;
+    int nbrOfPlatforms;
 
     public static bool hasJumped;
 
@@ -30,6 +33,7 @@ public class PlayerScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
+        pms = GameObject.FindGameObjectWithTag("PlatformManager").GetComponent<PlatformManagerScript>();
 
         playerHeight = sr.bounds.extents.y;
         playerWidth = sr.bounds.extents.x;
@@ -47,7 +51,14 @@ public class PlayerScript : MonoBehaviour
         {
             hasJumped = false;
             //touchedGround = true;
-            Debug.Log($"hasJumped: {hasJumped}");
+            //Debug.Log($"hasJumped: {hasJumped}");
+            if(currentPlatformCollider != null)
+            {
+                nbrOfPlatforms++;
+                GUIScript.tmp.text = $"Score: {nbrOfPlatforms}";
+
+                currentPlatformCollider = null;
+            }
 
             rb.linearVelocityX = rb.linearVelocityX * groundKoefficient * Time.deltaTime;
         }
@@ -75,6 +86,13 @@ public class PlayerScript : MonoBehaviour
 {
     if (collision.collider.CompareTag("Ground"))
     {
+        if (pms.platformsColliders.Contains(collision.collider))
+        {
+                currentPlatformCollider = collision.collider;
+                pms.platformsColliders.Remove(collision.collider);
+        }
+        
+
         Vector2 playerPos = transform.position;
         Vector2 platformPos = collision.collider.transform.position;
 
