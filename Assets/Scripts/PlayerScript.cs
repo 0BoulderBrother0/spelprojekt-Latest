@@ -3,6 +3,7 @@ using UnityEngine.Rendering;
 
 public class PlayerScript : MonoBehaviour
 {
+    //Tjenare
     Rigidbody2D rb;
     SpriteRenderer sr;
     PlatformManagerScript pms;
