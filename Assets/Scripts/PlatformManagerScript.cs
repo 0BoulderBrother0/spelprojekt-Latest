@@ -27,8 +27,6 @@ public class PlatformManagerScript : MonoBehaviour
 
         platformWidth = totalBounds.extents.x;
         platformHeight = totalBounds.extents.y;
-
-        //StartCoroutine(SpawnPlatforms());
     }
 
     void Update()
