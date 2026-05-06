@@ -3,15 +3,15 @@ using UnityEngine.Rendering;
 
 public class PlayerScript : MonoBehaviour
 {
-    //Tjenare
     Rigidbody2D rb;
     SpriteRenderer sr;
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
     float xAxis;
-    float playerHeight;
+    public float playerHeight;
     float playerWidth;
     int nbrOfPlatforms;
+    public Vector2 playerPos;
 
     public static bool hasJumped;
 
@@ -44,6 +44,7 @@ public class PlayerScript : MonoBehaviour
     void Update()
     {
         xAxis = Input.GetAxisRaw("Horizontal");
+        playerPos = transform.position;
 
         secondsSinceJump += Time.deltaTime;
         
@@ -93,8 +94,6 @@ public class PlayerScript : MonoBehaviour
                 pms.platformsColliders.Remove(collision.collider);
         }
         
-
-        Vector2 playerPos = transform.position;
         Vector2 platformPos = collision.collider.transform.position;
 
         float platformTop = collision.collider.bounds.max.y;
