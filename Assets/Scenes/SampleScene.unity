@@ -149,9 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   platformObject: {fileID: 3389522379096500041, guid: 6208559abeca3c74394752206275920f, type: 3}
+  maxNbrPlatformsPerBatch: 4
+  distanceBetween: 4
   platformsColliders: []
-  platformHeight: 0
-  platformWidth: 0
+  triesSpawningPlatform: 6
 --- !u!4 &26548572
 Transform:
   m_ObjectHideFlags: 0
@@ -869,6 +870,10 @@ PrefabInstance:
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: platformDistanceBuffer
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: SecondsDisabledIsOnGround
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name

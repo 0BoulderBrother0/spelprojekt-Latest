@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour
 
     public float SecondsDisabledIsOnGround = 1;
     float secondsSinceJump;
+    
 
     [Header("Platform Help")]
     public float platformHelpDistance;
