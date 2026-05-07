@@ -13,7 +13,7 @@ public class PlatformScript : MonoBehaviour
     void Awake()
     {
 
-        transform.localScale = new Vector3(Random.Range(1f, 2f), 1, 1);
+        transform.localScale = new Vector3(Random.Range(1f, PlatformManagerScript.platformMaxScale), 1, 1);
 
 
         srArray = GetComponentsInChildren<SpriteRenderer>(); 

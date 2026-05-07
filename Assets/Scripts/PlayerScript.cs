@@ -8,15 +8,18 @@ public class PlayerScript : MonoBehaviour
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
     float xAxis;
+
     public float playerHeight;
     float playerWidth;
-    int nbrOfPlatforms;
     public Vector2 playerPos;
 
+    Vector2 platformPos;
+    float platformTop;
+    float platformWidth;
+    int nbrOfPlatforms;
+
     public static bool hasJumped;
-
-
-    public float SecondsDisabledIsOnGround = 1;
+    public float secondsDisabledIsOnGround = 1;
     float secondsSinceJump;
     
 
@@ -30,6 +33,9 @@ public class PlayerScript : MonoBehaviour
     public float jumpHeight;
     public float airKoefficient = 0.1f;
     public float groundKoefficient = 0.1f;
+
+    public static bool endGame;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -50,7 +56,7 @@ public class PlayerScript : MonoBehaviour
         secondsSinceJump += Time.deltaTime;
         
 
-        if (GroundCheckScript.isOnGround && SecondsDisabledIsOnGround <= secondsSinceJump)
+        if (GroundCheckScript.isOnGround && secondsDisabledIsOnGround <= secondsSinceJump)
         {
             hasJumped = false;
             //touchedGround = true;
@@ -83,23 +89,34 @@ public class PlayerScript : MonoBehaviour
             //Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
         }
         
+
+        if (playerPos.y <= -CameraScript.screenHeight - playerHeight)
+        {
+            EndGame();
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            if (pms.platformsColliders.Contains(collision.collider))
+            {
+                currentPlatformCollider = collision.collider;
+                pms.platformsColliders.Remove(collision.collider);
+            }
+
+            platformPos = collision.collider.transform.position;
+
+            platformTop = collision.collider.bounds.max.y;
+            platformWidth = collision.collider.bounds.extents.x;
+        }
     }
 
     void OnCollisionStay2D(Collision2D collision)
-{
+    {
     if (collision.collider.CompareTag("Ground"))
     {
-        if (pms.platformsColliders.Contains(collision.collider))
-        {
-                currentPlatformCollider = collision.collider;
-                pms.platformsColliders.Remove(collision.collider);
-        }
-        
-        Vector2 platformPos = collision.collider.transform.position;
-
-        float platformTop = collision.collider.bounds.max.y;
-        float platformWidth = collision.collider.bounds.extents.x;
-
 
         if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight + platformDistanceBuffer < platformTop && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
         {
@@ -108,7 +125,12 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceY(platformTop + playerHeight + platformHelpBoost - playerPos.y);
         }
     }
-}
+    }
+
+    void EndGame()
+    {
+        endGame = true;
+    }
 
 
 }

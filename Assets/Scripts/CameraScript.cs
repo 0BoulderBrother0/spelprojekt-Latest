@@ -6,7 +6,8 @@ public class CameraScript : MonoBehaviour
     public float baseCameraSpeed;
     public float playerMoveFactor;
 
-    public float currentCameraSpeed;  
+    public float currentCameraSpeed;
+    public float gameOverSlowdown = 0.1f;
 
     public static float screenWidth;
     public static float screenHeight;
@@ -32,21 +33,28 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
-
-        float threshold = screenHeight - (3 * ps.playerHeight);
-
-        if (playerCameraVector.y >= threshold)
+        if (PlayerScript.endGame)
         {
-            overstepDistance = playerCameraVector.y - threshold;
-
-            currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
+            currentCameraSpeed = Mathf.Max(0, currentCameraSpeed - gameOverSlowdown * Time.deltaTime);
         }
         else
         {
-            currentCameraSpeed = baseCameraSpeed;
+            playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
+
+            float threshold = screenHeight - (3 * ps.playerHeight);
+
+            if (playerCameraVector.y >= threshold)
+            {
+                overstepDistance = playerCameraVector.y - threshold;
+                currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
+            }
+            else
+            {
+                currentCameraSpeed = baseCameraSpeed;
+            }
         }
 
         transform.position += new Vector3(0, currentCameraSpeed, 0) * Time.deltaTime;
     }
+
 }
