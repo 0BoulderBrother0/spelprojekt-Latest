@@ -19,9 +19,9 @@ public class PlayerScript : MonoBehaviour
     int nbrOfPlatforms;
 
     public static bool hasJumped;
-    public float secondsDisabledIsOnGround = 1;
-    float secondsSinceJump;
-    
+    //public float secondsDisabledIsOnGround = 1;
+    //float secondsSinceJump;
+
 
     [Header("Platform Help")]
     public float platformHelpDistance;
@@ -53,19 +53,20 @@ public class PlayerScript : MonoBehaviour
         xAxis = Input.GetAxisRaw("Horizontal");
         playerPos = transform.position;
 
-        secondsSinceJump += Time.deltaTime;
-        
+        //secondsSinceJump += Time.deltaTime;
 
-        if (GroundCheckScript.isOnGround && secondsDisabledIsOnGround <= secondsSinceJump)
+
+        if (GroundCheckScript.isOnGround && rb.linearVelocityY == 0)
         {
             hasJumped = false;
             //touchedGround = true;
             //Debug.Log($"hasJumped: {hasJumped}");
-            if(currentPlatformCollider != null)
+            if (currentPlatformCollider != null)
             {
                 nbrOfPlatforms++;
                 GUIScript.tmp.text = $"Score: {nbrOfPlatforms}";
 
+                pms.platformsColliders.Remove(currentPlatformCollider);
                 currentPlatformCollider = null;
             }
 
@@ -74,7 +75,7 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
         {
-            secondsSinceJump = 0;
+            //secondsSinceJump = 0;
             hasJumped = true;
             Debug.Log($"hasJumped: {hasJumped}");
 
@@ -88,7 +89,7 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed * airKoefficient * Time.deltaTime, ForceMode2D.Force);
             //Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
         }
-        
+
 
         if (playerPos.y <= -CameraScript.screenHeight - playerHeight)
         {
@@ -100,10 +101,9 @@ public class PlayerScript : MonoBehaviour
     {
         if (collision.collider.CompareTag("Ground"))
         {
-            if (pms.platformsColliders.Contains(collision.collider))
+            if (pms.platformsColliders.Contains(collision.collider) && GroundCheckScript.isOnGround)
             {
                 currentPlatformCollider = collision.collider;
-                pms.platformsColliders.Remove(collision.collider);
             }
 
             platformPos = collision.collider.transform.position;
@@ -115,16 +115,16 @@ public class PlayerScript : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D collision)
     {
-    if (collision.collider.CompareTag("Ground"))
-    {
-
-        if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight + platformDistanceBuffer < platformTop && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
+        if (collision.collider.CompareTag("Ground"))
         {
-            Debug.Log("Triggered platform help!");
-            //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
-            rb.AddForceY(platformTop + playerHeight + platformHelpBoost - playerPos.y);
+
+            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight < platformTop - platformDistanceBuffer && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
+            {
+                Debug.Log("Triggered platform help!");
+                //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
+                rb.AddForceY(platformTop + playerHeight + platformHelpBoost - playerPos.y);
+            }
         }
-    }
     }
 
     void EndGame()

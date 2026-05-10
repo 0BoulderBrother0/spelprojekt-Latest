@@ -27,10 +27,4 @@ public class PlatformScript : MonoBehaviour
         platformWidth = totalBounds.extents.x;
         platformHeight = totalBounds.extents.y;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

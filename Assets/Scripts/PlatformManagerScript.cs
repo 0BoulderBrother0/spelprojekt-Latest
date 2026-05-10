@@ -7,16 +7,15 @@ public class PlatformManagerScript : MonoBehaviour
     public GameObject platformObject;
     public int maxNbrPlatformsPerBatch = 4;
     public float distanceBetween = 4;
-    GameObject newPlatform;
     public List<Collider2D> platformsColliders;
     bool hasSpawnedPlatforms;
 
     Camera cam;
-
+    PlatformScript platformScript;
 
     SpriteRenderer[] srArray;
-    float platformWidth;
-    float platformHeight;
+    float originalPlatformWidth;
+    float originalPlatformHeight;
     public static float platformMaxScale = 2f;
 
 
@@ -43,7 +42,7 @@ public class PlatformManagerScript : MonoBehaviour
                 nbrTries = 0;
                 skipPlatform = false;
 
-                if (platformWidth == 0 || platformHeight == 0)
+                if (originalPlatformWidth == 0 || originalPlatformHeight == 0)
                 {
                     srArray = platformObject.GetComponentsInChildren<SpriteRenderer>();
 
@@ -53,18 +52,18 @@ public class PlatformManagerScript : MonoBehaviour
                         totalBounds.Encapsulate(sr.bounds);
                     }
 
-                    platformWidth = totalBounds.extents.x;
-                    platformHeight = totalBounds.extents.y;
+                    originalPlatformWidth = totalBounds.extents.x;
+                    originalPlatformHeight = totalBounds.extents.y;
                 }
 
                 do
                 {
                     overlapping = false;
-                    newPlatformPositionX = Random.Range(-CameraScript.screenWidth + platformWidth * platformMaxScale, CameraScript.screenWidth - platformWidth * platformMaxScale);
+                    newPlatformPositionX = Random.Range(-CameraScript.screenWidth + originalPlatformWidth * platformMaxScale, CameraScript.screenWidth - originalPlatformWidth * platformMaxScale);
 
                     foreach (GameObject platform in spawnedPlatforms)
                     {
-                        if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < platformWidth * 2 * platformMaxScale)
+                        if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < originalPlatformWidth * 2 * platformMaxScale)
                         {
                             overlapping = true;
                             break;
@@ -81,12 +80,12 @@ public class PlatformManagerScript : MonoBehaviour
 
                 if (!skipPlatform)
                 {
-                    newPlatform = Instantiate(platformObject, new Vector2(newPlatformPositionX, CameraScript.screenHeight + platformHeight + cam.transform.position.y), Quaternion.identity);
+                    GameObject newPlatform = Instantiate(platformObject, new Vector2(newPlatformPositionX, CameraScript.screenHeight + originalPlatformHeight + cam.transform.position.y), Quaternion.identity);
                     spawnedPlatforms.Add(newPlatform);
 
-                    PlatformScript platformScript = newPlatform.GetComponent<PlatformScript>();
-                    platformWidth = platformScript.platformWidth;
-                    platformHeight = platformScript.platformHeight;
+                    /*PlatformScript platformScript = newPlatform.GetComponent<PlatformScript>();
+                    originalPlatformWidth = platformScript.platformWidth;
+                    originalPlatformHeight = platformScript.platformHeight;*/
 
                     platformsColliders.Add(newPlatform.GetComponent<Collider2D>());
                 }

@@ -219,8 +219,8 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1.2265625, y: 1.5234375}
+  m_Offset: {x: 0, y: -0.02}
+  m_Size: {x: 1.2, y: 1.6}
   m_Direction: 0
 --- !u!50 &6234027290567965738
 Rigidbody2D:
@@ -261,6 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfce3eef8a3bdbc46861f921adf23405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  playerHeight: 0
+  playerPos: {x: 0, y: 0}
   platformHelpDistance: 1
   platformDistanceBuffer: 0.1
   platformHelpBoost: 30

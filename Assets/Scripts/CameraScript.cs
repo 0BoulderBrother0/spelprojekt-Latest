@@ -41,8 +41,8 @@ public class CameraScript : MonoBehaviour
         {
             playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
 
-            float threshold = screenHeight - (3 * ps.playerHeight);
-
+            float threshold = screenHeight - (4 * ps.playerHeight);
+    
             if (playerCameraVector.y >= threshold)
             {
                 overstepDistance = playerCameraVector.y - threshold;
