@@ -91,8 +91,9 @@ public class PlayerScript : MonoBehaviour
         }
 
 
-        if (playerPos.y <= -CameraScript.screenHeight - playerHeight)
+        if (playerPos.y + playerHeight <= Camera.main.transform.position.y - CameraScript.screenHeight && !endGame)
         {
+            Debug.Log("Ended game");
             EndGame();
         }
     }
@@ -118,7 +119,10 @@ public class PlayerScript : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
 
-            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight < platformTop - platformDistanceBuffer && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
+            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance 
+                && playerPos.y - playerHeight < platformTop - platformDistanceBuffer 
+                && (platformPos.x + platformWidth <= playerPos.x - playerWidth 
+                || platformPos.x - platformWidth >= playerPos.x + playerWidth))
             {
                 Debug.Log("Triggered platform help!");
                 //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
@@ -130,6 +134,7 @@ public class PlayerScript : MonoBehaviour
     void EndGame()
     {
         endGame = true;
+
     }
 
 

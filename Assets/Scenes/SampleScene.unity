@@ -435,8 +435,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   baseCameraSpeed: 0.7
   playerMoveFactor: 1
-  currentCameraSpeed: 0
-  gameOverSlowdown: 0.1
+  ThresholdToMove: 7
+  gameOverSlowdown: 0.5
 --- !u!1 &574701455
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,7 +472,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 242.328, y: 161.213}
-  m_SizeDelta: {x: 484.656, y: 161.213}
+  m_SizeDelta: {x: 484.656, y: 161.21301}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &574701457
 MonoBehaviour:

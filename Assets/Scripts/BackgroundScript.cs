@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class BackgroundScript : MonoBehaviour
 {
-    PlayerScript ps;
+    Camera cam;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ps = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
+        cam = Camera.main;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position = new Vector3(0, ps.transform.position.y, 0);
+        transform.position = new Vector3(0, cam.transform.position.y, 0);
     }
 }

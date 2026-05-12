@@ -5,8 +5,9 @@ public class CameraScript : MonoBehaviour
     [Header("Speed Settings")]
     public float baseCameraSpeed;
     public float playerMoveFactor;
+    public float ThresholdToMove = 7;
 
-    public float currentCameraSpeed;
+    float currentCameraSpeed;
     public float gameOverSlowdown = 0.1f;
 
     public static float screenWidth;
@@ -35,13 +36,13 @@ public class CameraScript : MonoBehaviour
     {
         if (PlayerScript.endGame)
         {
-            currentCameraSpeed = Mathf.Max(0, currentCameraSpeed - gameOverSlowdown * Time.deltaTime);
+            currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, 0, gameOverSlowdown * Time.deltaTime);
         }
         else
         {
             playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
 
-            float threshold = screenHeight - (4 * ps.playerHeight);
+            float threshold = screenHeight - (ThresholdToMove * ps.playerHeight);
     
             if (playerCameraVector.y >= threshold)
             {
