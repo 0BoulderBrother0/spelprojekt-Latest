@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,6 +13,7 @@ public class PlayerScript : MonoBehaviour
     public float playerHeight;
     float playerWidth;
     public Vector2 playerPos;
+    public float standStillThreshold = 0.1f;
 
     Vector2 platformPos;
     float platformTop;
@@ -21,6 +23,7 @@ public class PlayerScript : MonoBehaviour
     public static bool hasJumped;
     //public float secondsDisabledIsOnGround = 1;
     //float secondsSinceJump;
+    
 
 
     [Header("Platform Help")]
@@ -35,6 +38,10 @@ public class PlayerScript : MonoBehaviour
     public float groundKoefficient = 0.1f;
 
     public static bool endGame;
+    public static bool resumeGame;
+    bool underScreen;
+    public float SecondsBeforeDeath;
+    Coroutine startEndGame;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -56,7 +63,7 @@ public class PlayerScript : MonoBehaviour
         //secondsSinceJump += Time.deltaTime;
 
 
-        if (GroundCheckScript.isOnGround && rb.linearVelocityY == 0)
+        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
         {
             hasJumped = false;
             //touchedGround = true;
@@ -91,10 +98,24 @@ public class PlayerScript : MonoBehaviour
         }
 
 
-        if (playerPos.y + playerHeight <= Camera.main.transform.position.y - CameraScript.screenHeight && !endGame)
+        if (playerPos.y + playerHeight <= Camera.main.transform.position.y - CameraScript.screenHeight && !underScreen)
         {
-            Debug.Log("Ended game");
-            EndGame();
+            Debug.Log("Started EndGame");
+            underScreen = true;
+            if (startEndGame == null)
+            {
+                startEndGame = StartCoroutine(StartEndGame());
+            }
+            else
+            {
+                StopCoroutine(startEndGame);
+                startEndGame = StartCoroutine(StartEndGame());
+            }
+        }
+        else if (playerPos.y + playerHeight > Camera.main.transform.position.y - CameraScript.screenHeight && underScreen)
+        {
+            underScreen = false;
+            Debug.Log("Stopping EndGame");
         }
     }
 
@@ -119,10 +140,7 @@ public class PlayerScript : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
 
-            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance 
-                && playerPos.y - playerHeight < platformTop - platformDistanceBuffer 
-                && (platformPos.x + platformWidth <= playerPos.x - playerWidth 
-                || platformPos.x - platformWidth >= playerPos.x + playerWidth))
+            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight < platformTop - platformDistanceBuffer && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
             {
                 Debug.Log("Triggered platform help!");
                 //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
@@ -133,8 +151,26 @@ public class PlayerScript : MonoBehaviour
 
     void EndGame()
     {
+        Destroy(gameObject);
+    }
+
+    IEnumerator StartEndGame()
+    {
         endGame = true;
 
+        yield return new WaitForSeconds(SecondsBeforeDeath);
+
+        if (underScreen)
+        {
+            Debug.Log("Ended game.");
+            EndGame();   
+        }
+        else
+        {
+            resumeGame = true;
+            endGame = false;
+            Debug.Log("Stopped EndGame!");
+        }
     }
 
 

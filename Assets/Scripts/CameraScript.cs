@@ -9,6 +9,9 @@ public class CameraScript : MonoBehaviour
 
     float currentCameraSpeed;
     public float gameOverSlowdown = 0.1f;
+    public float resumeGameSpeedup = 1.3f;
+    public float resumeGameBaseSpeedThreshold = 0.01f;
+    public float resumeGameToPlayerPositionRegulationDistance = 0.5f;
 
     public static float screenWidth;
     public static float screenHeight;
@@ -37,6 +40,16 @@ public class CameraScript : MonoBehaviour
         if (PlayerScript.endGame)
         {
             currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, 0, gameOverSlowdown * Time.deltaTime);
+        }
+        else if (PlayerScript.resumeGame)
+        {
+            currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed, resumeGameSpeedup * Time.deltaTime);
+
+            if (currentCameraSpeed >= baseCameraSpeed - resumeGameBaseSpeedThreshold)
+            {
+                PlayerScript.resumeGame = false;
+                Debug.Log($"Resume game: {PlayerScript.resumeGame}");
+            }
         }
         else
         {

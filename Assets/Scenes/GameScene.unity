@@ -437,6 +437,9 @@ MonoBehaviour:
   playerMoveFactor: 1
   ThresholdToMove: 7
   gameOverSlowdown: 0.5
+  resumeGameSpeedup: 2.3
+  resumeGameBaseSpeedThreshold: 0.001
+  resumeGameToPlayerPositionRegulationDistance: 0.5
 --- !u!1 &574701455
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,6 +807,62 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 501675555348440270, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 501697623775419619, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 857948787298343921, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 904292843479742801, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 994034578530114806, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1042194966533726502, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2747980756556973562, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3898811841751432520, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4501752950280312934, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4894711319416254174, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148542733971879729, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5314573903123979091, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5660086662538314093, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5698626448576363143, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6567069775029697311, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -860,9 +919,33 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6644942165640177977, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 6689421085012703245, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
       propertyPath: m_Name
       value: BackgroundIdle
+      objectReference: {fileID: 0}
+    - target: {fileID: 6771336183520715555, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7054082652908745615, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8130015783085543726, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8361955892065562501, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8880816609865072480, guid: 9d1a572b20ffbada79dca4edb6cf23d2, type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -929,6 +1012,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6203259524001099134, guid: 62060c9b06ffbc687a7a3016dce1b3c6, type: 3}
+      propertyPath: m_SortingOrder
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 8637043556171877834, guid: 62060c9b06ffbc687a7a3016dce1b3c6, type: 3}
       propertyPath: m_Name
       value: BackgroundActive
@@ -992,7 +1079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: jumpHeight
-      value: 11
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: airKoefficient
@@ -1009,6 +1096,10 @@ PrefabInstance:
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: velocityThreshold
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: SecondsBeforeDeath
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: platformHelpDistance
