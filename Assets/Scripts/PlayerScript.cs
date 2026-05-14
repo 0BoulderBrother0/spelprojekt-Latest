@@ -9,27 +9,19 @@ public class PlayerScript : MonoBehaviour
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
     float xAxis;
-
-    public float playerHeight;
-    float playerWidth;
-    public Vector2 playerPos;
-    public float standStillThreshold = 0.1f;
-
-    Vector2 platformPos;
-    float platformTop;
-    float platformWidth;
     int nbrOfPlatforms;
 
+    [Header("Player")]
+    public float playerHeight;
+    public float playerWidth;
+    public Vector2 playerPos;
     public static bool hasJumped;
-    //public float secondsDisabledIsOnGround = 1;
-    //float secondsSinceJump;
-    
-
+    public float standStillThreshold = 0.1f;
 
     [Header("Platform Help")]
-    public float platformHelpDistance;
-    public float platformDistanceBuffer;
-    public float platformHelpBoost = 3;
+    public float platformHelpBoost;
+    public static float platformBoost;
+    public static bool insidePlatform;
 
     [Header("Speed")]
     public float moveSpeed;
@@ -52,6 +44,8 @@ public class PlayerScript : MonoBehaviour
 
         playerHeight = sr.bounds.extents.y;
         playerWidth = sr.bounds.extents.x;
+
+        platformBoost = platformHelpBoost;
     }
 
     // Update is called once per frame
@@ -90,7 +84,7 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
             //Debug.Log($"Force before air: {xAxis * moveSpeed}");
         }
-
+         
         if (hasJumped)
         {
             rb.AddForceX(xAxis * moveSpeed * airKoefficient * Time.deltaTime, ForceMode2D.Force);
@@ -127,25 +121,6 @@ public class PlayerScript : MonoBehaviour
             {
                 currentPlatformCollider = collision.collider;
             }
-
-            platformPos = collision.collider.transform.position;
-
-            platformTop = collision.collider.bounds.max.y;
-            platformWidth = collision.collider.bounds.extents.x;
-        }
-    }
-
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Ground"))
-        {
-
-            if (platformTop - (playerPos.y - playerHeight) <= platformHelpDistance && playerPos.y - playerHeight < platformTop - platformDistanceBuffer && (platformPos.x + platformWidth <= playerPos.x - playerWidth || platformPos.x - platformWidth >= playerPos.x + playerWidth))
-            {
-                Debug.Log("Triggered platform help!");
-                //transform.position = new Vector2(playerPos.x, platformTop + playerHeight + platformDistanceBuffer);
-                rb.AddForceY(platformTop + playerHeight + platformHelpBoost - playerPos.y);
-            }
         }
     }
 
@@ -175,7 +150,3 @@ public class PlayerScript : MonoBehaviour
 
 
 }
-
-
-
-//hej

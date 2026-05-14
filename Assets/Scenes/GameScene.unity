@@ -1074,44 +1074,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: moveSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: jumpHeight
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: airKoefficient
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: groundKoefficient
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: platformHelpBoost
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: velocityThreshold
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: SecondsBeforeDeath
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: platformHelpDistance
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: platformDistanceBuffer
-      value: 0.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: SecondsDisabledIsOnGround
-      value: 1
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name
