@@ -16,7 +16,7 @@ public class PlatformHelpColliderScript : MonoBehaviour
         {
             if (gameObject.CompareTag("PlatformHelpColliderLeft"))
                 phs.leftTouching = true;
-            else if (gameObject.CompareTag("PlatformHelpColliderRight"))
+            if (gameObject.CompareTag("PlatformHelpColliderRight"))
                 phs.rightTouching = true;
 
             phs.TriggerPlatformHelp();
@@ -29,7 +29,7 @@ public class PlatformHelpColliderScript : MonoBehaviour
         {
             if (gameObject.CompareTag("PlatformHelpColliderLeft"))
                 phs.leftTouching = false;
-            else if (gameObject.CompareTag("PlatformHelpColliderRight"))
+            if (gameObject.CompareTag("PlatformHelpColliderRight"))
                 phs.rightTouching = false;
         }
     }
