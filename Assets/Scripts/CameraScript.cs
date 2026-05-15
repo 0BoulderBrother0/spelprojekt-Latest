@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class CameraScript : MonoBehaviour
@@ -43,9 +44,21 @@ public class CameraScript : MonoBehaviour
         }
         else if (PlayerScript.resumeGame)
         {
-            currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed, resumeGameSpeedup * Time.deltaTime);
+            playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
 
-            if (currentCameraSpeed >= baseCameraSpeed - resumeGameBaseSpeedThreshold)
+            float threshold = screenHeight - (ThresholdToMove * ps.playerHeight);
+    
+            if (playerCameraVector.y >= threshold)
+            {
+                overstepDistance = playerCameraVector.y - threshold;
+                currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed + (overstepDistance * playerMoveFactor), resumeGameSpeedup * Time.deltaTime);
+            }
+            else
+            {
+                currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed, resumeGameSpeedup * Time.deltaTime);
+            }
+
+            if (currentCameraSpeed >= baseCameraSpeed)
             {
                 PlayerScript.resumeGame = false;
                 Debug.Log($"Resume game: {PlayerScript.resumeGame}");

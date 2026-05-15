@@ -14,8 +14,24 @@ public class PlatformHelpScript : MonoBehaviour
 
     public void TriggerPlatformHelp()
     {
-        if (leftTouching != rightTouching)
+        if (leftTouching != rightTouching && rb.linearVelocityY <= PlayerScript.standStillThreshold)
         {
+            if (leftTouching)
+            {
+                rb.AddForceX(-PlayerScript.towardsPlatformBoost * Time.deltaTime);
+                if (rb.linearVelocityX < -PlayerScript.standStillThreshold)
+                {
+                    rb.linearVelocityX = -PlayerScript.standStillThreshold;
+                }
+            }
+            else
+            {
+                rb.AddForceX(PlayerScript.towardsPlatformBoost * Time.deltaTime);
+                if (rb.linearVelocityX > PlayerScript.standStillThreshold)
+                {
+                    rb.linearVelocityX = PlayerScript.standStillThreshold;
+                }
+            }
             rb.AddForceY(PlayerScript.platformBoost * Time.deltaTime);
         }
     }

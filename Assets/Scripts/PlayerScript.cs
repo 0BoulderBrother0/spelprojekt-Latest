@@ -6,6 +6,7 @@ public class PlayerScript : MonoBehaviour
 {
     Rigidbody2D rb;
     SpriteRenderer sr;
+    public SpriteRenderer[] animations;
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
     float xAxis;
@@ -16,11 +17,13 @@ public class PlayerScript : MonoBehaviour
     public float playerWidth;
     public Vector2 playerPos;
     public static bool hasJumped;
-    public float standStillThreshold = 0.1f;
+    public static float standStillThreshold = 0.1f;
 
     [Header("Platform Help")]
     public float platformHelpBoost;
+    public float towardsPlatformHelpBoost;
     public static float platformBoost;
+    public static float towardsPlatformBoost;
     public static bool insidePlatform;
 
     [Header("Speed")]
@@ -46,6 +49,7 @@ public class PlayerScript : MonoBehaviour
         playerWidth = sr.bounds.extents.x;
 
         platformBoost = platformHelpBoost;
+        towardsPlatformBoost = towardsPlatformHelpBoost;
     }
 
     // Update is called once per frame
@@ -54,7 +58,14 @@ public class PlayerScript : MonoBehaviour
         xAxis = Input.GetAxisRaw("Horizontal");
         playerPos = transform.position;
 
-        //secondsSinceJump += Time.deltaTime;
+        if (rb.linearVelocityX < -standStillThreshold)
+        {
+            sr.flipX = true;
+        }
+        else if (rb.linearVelocityX > standStillThreshold)
+        {
+            sr.flipX = false;
+        }
 
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
@@ -72,23 +83,50 @@ public class PlayerScript : MonoBehaviour
             }
 
             rb.linearVelocityX = rb.linearVelocityX * groundKoefficient * Time.deltaTime;
+
+            sr.sprite = animations[0].sprite;
+
+            if (xAxis < 0)
+            {
+                sr.flipX = true;
+            }
+            else if (xAxis > 0)
+            {
+                sr.flipX = false;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+
+        if (Input.GetKey(KeyCode.Space) && !hasJumped)
         {
-            //secondsSinceJump = 0;
+            sr.sprite = animations[1].sprite;
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
+        {
             hasJumped = true;
             Debug.Log($"hasJumped: {hasJumped}");
 
             rb.linearVelocityY = jumpHeight;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
-            //Debug.Log($"Force before air: {xAxis * moveSpeed}");
+
+            sr.sprite = animations[2].sprite;
         }
-         
+
+
         if (hasJumped)
         {
             rb.AddForceX(xAxis * moveSpeed * airKoefficient * Time.deltaTime, ForceMode2D.Force);
             //Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
+
+            if (rb.linearVelocityY >= standStillThreshold)
+            {
+                sr.sprite = animations[2].sprite;
+            }
+            else
+            {
+                sr.sprite = animations[3].sprite;
+            }
         }
 
 
@@ -106,6 +144,7 @@ public class PlayerScript : MonoBehaviour
                 startEndGame = StartCoroutine(StartEndGame());
             }
         }
+
         else if (playerPos.y + playerHeight > Camera.main.transform.position.y - CameraScript.screenHeight && underScreen)
         {
             underScreen = false;
@@ -138,7 +177,7 @@ public class PlayerScript : MonoBehaviour
         if (underScreen)
         {
             Debug.Log("Ended game.");
-            EndGame();   
+            EndGame();
         }
         else
         {
