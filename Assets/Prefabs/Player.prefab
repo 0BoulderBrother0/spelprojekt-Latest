@@ -77,7 +77,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.3, y: 0.1}
+  m_Size: {x: 0.4, y: 0.1}
   m_EdgeRadius: 0
 --- !u!114 &6399154357436865978
 MonoBehaviour:
@@ -413,8 +413,8 @@ MonoBehaviour:
   towardsPlatformHelpBoost: 10000
   moveSpeed: 4
   jumpHeight: 13
-  airKoefficient: 60
-  groundKoefficient: 60
+  airSpeedupKoefficient: 0
+  groundSlowdownKoefficient: 0
   SecondsBeforeDeath: 5
 --- !u!1 &6633439441432527715
 GameObject:

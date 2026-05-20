@@ -29,14 +29,18 @@ public class PlayerScript : MonoBehaviour
     [Header("Speed")]
     public float moveSpeed;
     public float jumpHeight;
-    public float airKoefficient = 0.1f;
-    public float groundKoefficient = 0.1f;
+    public float jumpPowerupBoost = 2;
+    public float airSpeedupKoefficient;
+    public float groundSlowdownKoefficient;
 
     public static bool endGame;
     public static bool resumeGame;
     bool underScreen;
     public float SecondsBeforeDeath;
     Coroutine startEndGame;
+
+    Coroutine jumpPowerupActive;
+    float jumpPowerupActiveTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -82,8 +86,6 @@ public class PlayerScript : MonoBehaviour
                 currentPlatformCollider = null;
             }
 
-            rb.linearVelocityX = rb.linearVelocityX * groundKoefficient * Time.deltaTime;
-
             sr.sprite = animations[0].sprite;
 
             if (xAxis < 0)
@@ -107,7 +109,7 @@ public class PlayerScript : MonoBehaviour
             hasJumped = true;
             Debug.Log($"hasJumped: {hasJumped}");
 
-            rb.linearVelocityY = jumpHeight;
+            rb.linearVelocityY = jumpHeight * jumpPowerupBoost;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
 
             sr.sprite = animations[2].sprite;
@@ -116,9 +118,6 @@ public class PlayerScript : MonoBehaviour
 
         if (hasJumped)
         {
-            rb.AddForceX(xAxis * moveSpeed * airKoefficient * Time.deltaTime, ForceMode2D.Force);
-            //Debug.Log($"Force in air: {xAxis * moveSpeed * airKoefficient}");
-
             if (rb.linearVelocityY >= standStillThreshold)
             {
                 sr.sprite = animations[2].sprite;
@@ -152,6 +151,19 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (hasJumped)
+        {
+            rb.AddForceX(xAxis * moveSpeed * airSpeedupKoefficient, ForceMode2D.Force);
+        }
+
+        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
+        {
+            rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient * Time.fixedDeltaTime);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
@@ -159,6 +171,14 @@ public class PlayerScript : MonoBehaviour
             if (pms.platformsColliders.Contains(collision.collider) && GroundCheckScript.isOnGround)
             {
                 currentPlatformCollider = collision.collider;
+            }
+        }
+
+        if (collision.collider.CompareTag("JumpPowerup"))
+        {
+            if (jumpPowerupActive == null)
+            {
+                jumpPowerupActive = StartCoroutine(JumpPowerupActive());
             }
         }
     }
@@ -185,6 +205,15 @@ public class PlayerScript : MonoBehaviour
             endGame = false;
             Debug.Log("Stopped EndGame!");
         }
+    }
+
+    IEnumerator JumpPowerupActive()
+    {
+        jumpPowerupBoost = 2;
+
+        yield return new WaitForSeconds(jumpPowerupActiveTime);
+        jumpPowerupActive = null;
+        jumpPowerupBoost = 1;
     }
 
 

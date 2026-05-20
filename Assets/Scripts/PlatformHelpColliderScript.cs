@@ -31,6 +31,7 @@ public class PlatformHelpColliderScript : MonoBehaviour
                 phs.leftTouching = false;
             if (gameObject.CompareTag("PlatformHelpColliderRight"))
                 phs.rightTouching = false;
+                
         }
     }
 }

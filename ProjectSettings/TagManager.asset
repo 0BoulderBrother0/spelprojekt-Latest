@@ -8,6 +8,7 @@ TagManager:
   - PlatformManager
   - PlatformHelpColliderLeft
   - PlatformHelpColliderRight
+  - JumpPowerup
   layers:
   - Default
   - TransparentFX
