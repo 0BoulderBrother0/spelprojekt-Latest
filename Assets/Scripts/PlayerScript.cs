@@ -29,7 +29,6 @@ public class PlayerScript : MonoBehaviour
     [Header("Speed")]
     public float moveSpeed;
     public float jumpHeight;
-    public float jumpPowerupBoost = 2;
     public float airSpeedupKoefficient;
     public float groundSlowdownKoefficient;
 
@@ -40,7 +39,9 @@ public class PlayerScript : MonoBehaviour
     Coroutine startEndGame;
 
     Coroutine jumpPowerupActive;
-    float jumpPowerupActiveTime;
+    public float jumpPowerupActiveTime;
+    float jumpBoost = 1;
+    public float jumpPowerup;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -107,9 +108,9 @@ public class PlayerScript : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
         {
             hasJumped = true;
-            Debug.Log($"hasJumped: {hasJumped}");
+            //Debug.Log($"hasJumped: {hasJumped}");
 
-            rb.linearVelocityY = jumpHeight * jumpPowerupBoost;
+            rb.linearVelocityY = jumpHeight * jumpBoost;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
 
             sr.sprite = animations[2].sprite;
@@ -158,7 +159,7 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed * airSpeedupKoefficient, ForceMode2D.Force);
         }
 
-        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
+        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) == 0)
         {
             rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient * Time.fixedDeltaTime);
         }
@@ -173,12 +174,22 @@ public class PlayerScript : MonoBehaviour
                 currentPlatformCollider = collision.collider;
             }
         }
+    }
 
-        if (collision.collider.CompareTag("JumpPowerup"))
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("JumpPowerup"))
         {
+            Destroy(collision.gameObject);
             if (jumpPowerupActive == null)
             {
-                jumpPowerupActive = StartCoroutine(JumpPowerupActive());
+                jumpPowerupActive = StartCoroutine(JumpPowerup());
+            }
+
+            else
+            {
+                StopCoroutine(jumpPowerupActive);
+                jumpPowerupActive = StartCoroutine(JumpPowerup());
             }
         }
     }
@@ -207,13 +218,17 @@ public class PlayerScript : MonoBehaviour
         }
     }
 
-    IEnumerator JumpPowerupActive()
+    IEnumerator JumpPowerup()
     {
-        jumpPowerupBoost = 2;
+        jumpBoost = jumpPowerup;
+
+        Debug.Log("Activated jump powerup!");
 
         yield return new WaitForSeconds(jumpPowerupActiveTime);
         jumpPowerupActive = null;
-        jumpPowerupBoost = 1;
+        jumpBoost = 1;
+
+        Debug.Log("Disabled jump powerup");
     }
 
 

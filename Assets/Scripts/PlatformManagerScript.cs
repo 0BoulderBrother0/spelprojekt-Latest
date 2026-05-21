@@ -22,80 +22,108 @@ public class PlatformManagerScript : MonoBehaviour
     int nbrTries;
     public int triesSpawningPlatform = 3;
     bool skipPlatform;
+    bool isReady;
 
+    [Header("Powerup")]
+    public GameObject jumpPowerupObject;
+    public float lengthAbovePlatform = 1;
 
-    void Start()
+    IEnumerator Start()
     {
         cam = Camera.main;
+
+
+        yield return null;
+
+
+        float[] originalPlatformDimensions = FindObjectDimensions(platformObject);
+
+        originalPlatformWidth = originalPlatformDimensions[0];
+        originalPlatformHeight = originalPlatformDimensions[1];
+
+         isReady = true;
     }
+
     void Update()
     {
-        if (Mathf.Round(cam.transform.position.y) % distanceBetween == 0 && !hasSpawnedPlatforms)
+        if (isReady)
         {
-            int nbrPlatforms = Random.Range(1, maxNbrPlatformsPerBatch);
-            List<GameObject> spawnedPlatforms = new List<GameObject>();
-
-            for (int i = 0; i < nbrPlatforms; i++)
+            if (Mathf.Round(cam.transform.position.y) % distanceBetween == 0 && !hasSpawnedPlatforms)
             {
-                float newPlatformPositionX;
-                bool overlapping;
-                nbrTries = 0;
-                skipPlatform = false;
+                int nbrPlatforms = Random.Range(1, maxNbrPlatformsPerBatch);
+                List<GameObject> spawnedPlatforms = new List<GameObject>();
 
-                if (originalPlatformWidth == 0 || originalPlatformHeight == 0)
+                for (int i = 0; i < nbrPlatforms; i++)
                 {
-                    srArray = platformObject.GetComponentsInChildren<SpriteRenderer>();
+                    float newPlatformPositionX;
+                    bool overlapping;
+                    nbrTries = 0;
+                    skipPlatform = false;
 
-                    Bounds totalBounds = srArray[0].bounds;
-                    foreach (SpriteRenderer sr in srArray)
+                    do
                     {
-                        totalBounds.Encapsulate(sr.bounds);
-                    }
+                        overlapping = false;
+                        newPlatformPositionX = Random.Range(-CameraScript.screenWidth + originalPlatformWidth * platformMaxScale, CameraScript.screenWidth - originalPlatformWidth * platformMaxScale);
 
-                    originalPlatformWidth = totalBounds.extents.x;
-                    originalPlatformHeight = totalBounds.extents.y;
-                }
-
-                do
-                {
-                    overlapping = false;
-                    newPlatformPositionX = Random.Range(-CameraScript.screenWidth + originalPlatformWidth * platformMaxScale, CameraScript.screenWidth - originalPlatformWidth * platformMaxScale);
-
-                    foreach (GameObject platform in spawnedPlatforms)
-                    {
-                        if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < originalPlatformWidth * 2 * platformMaxScale)
+                        foreach (GameObject platform in spawnedPlatforms)
                         {
-                            overlapping = true;
+                            if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < originalPlatformWidth * 2 * platformMaxScale)
+                            {
+                                overlapping = true;
+                                break;
+                            }
+                        }
+
+                        nbrTries++;
+                        if (nbrTries >= triesSpawningPlatform)
+                        {
+                            skipPlatform = true;
                             break;
                         }
-                    }
+                    } while (overlapping);
 
-                    nbrTries++;
-                    if (nbrTries >= triesSpawningPlatform)
+                    if (!skipPlatform)
                     {
-                        skipPlatform = true;
-                        break;
+                        GameObject newPlatform = Instantiate(platformObject, new Vector2(newPlatformPositionX, CameraScript.screenHeight + originalPlatformHeight + cam.transform.position.y), Quaternion.identity);
+                        spawnedPlatforms.Add(newPlatform);
+
+                        SpawnPowerup(newPlatform);
+
+                        platformsColliders.Add(newPlatform.GetComponent<Collider2D>());
                     }
-                } while (overlapping);
-
-                if (!skipPlatform)
-                {
-                    GameObject newPlatform = Instantiate(platformObject, new Vector2(newPlatformPositionX, CameraScript.screenHeight + originalPlatformHeight + cam.transform.position.y), Quaternion.identity);
-                    spawnedPlatforms.Add(newPlatform);
-
-                    /*PlatformScript platformScript = newPlatform.GetComponent<PlatformScript>();
-                    originalPlatformWidth = platformScript.platformWidth;
-                    originalPlatformHeight = platformScript.platformHeight;*/
-
-                    platformsColliders.Add(newPlatform.GetComponent<Collider2D>());
                 }
-            }
 
-            hasSpawnedPlatforms = true;
+                hasSpawnedPlatforms = true;
+            }
+            else if (Mathf.Round(cam.transform.position.y) % distanceBetween != 0)
+            {
+                hasSpawnedPlatforms = false;
+            }
         }
-        else if (Mathf.Round(cam.transform.position.y) % distanceBetween != 0)
+        
+    }
+
+    float[] FindObjectDimensions(GameObject gameObject)
+    {
+        SpriteRenderer[] srArray = gameObject.GetComponentsInChildren<SpriteRenderer>();
+
+        Bounds totalBounds = srArray[0].bounds;
+        foreach (SpriteRenderer sr in srArray)
         {
-            hasSpawnedPlatforms = false;
+            totalBounds.Encapsulate(sr.bounds);
         }
+
+        return new float[2] { totalBounds.extents.x, totalBounds.extents.y };
+    }
+
+    void SpawnPowerup(GameObject platformObject)
+    {
+        float[] platformDimensions = FindObjectDimensions(platformObject);
+
+        float spawnPositionX = platformObject.transform.position.x + Random.Range(-platformDimensions[0], platformDimensions[0]);
+        float spawnPositionY = platformObject.transform.position.y + platformDimensions[1] + lengthAbovePlatform;
+
+        Instantiate(jumpPowerupObject, new Vector2(spawnPositionX, spawnPositionY), Quaternion.identity);
     }
 }
+

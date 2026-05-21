@@ -16,7 +16,7 @@ public class PlatformHelpScript : MonoBehaviour
 
     public void TriggerPlatformHelp()
     {
-        if (leftTouching != rightTouching && rb.linearVelocityY <= PlayerScript.standStillThreshold)
+        if (leftTouching != rightTouching && rb.linearVelocityY <= 0)
         {
             if (leftTouching)
             {

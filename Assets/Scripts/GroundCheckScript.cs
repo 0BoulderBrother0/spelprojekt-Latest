@@ -22,7 +22,7 @@ public class GroundCheckScript : MonoBehaviour
         if (collision.CompareTag("Ground"))
         {
             isOnGround = false;
-            Debug.Log($"isOnGround: {isOnGround}");
+            //Debug.Log($"isOnGround: {isOnGround}");
         }
     }
 
@@ -31,7 +31,7 @@ public class GroundCheckScript : MonoBehaviour
         if (collision.CompareTag("Ground"))
         {
             isOnGround = true;
-            Debug.Log($"isOnGround: {isOnGround}");
+            //Debug.Log($"isOnGround: {isOnGround}");
             
         }
     }
