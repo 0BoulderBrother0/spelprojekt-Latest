@@ -158,6 +158,8 @@ MonoBehaviour:
   distanceBetween: 5
   platformsColliders: []
   triesSpawningPlatform: 6
+  jumpPowerupObject: {fileID: 7823154616337670662, guid: e83bd9c3b97c3d4489ef37de41db3fbe, type: 3}
+  lengthAbovePlatform: 1.5
 --- !u!4 &26548572
 Transform:
   m_ObjectHideFlags: 0
@@ -1098,8 +1100,16 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: jumpPowerup
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: airKoefficient
       value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: jumpPowerupBoost
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: groundKoefficient
@@ -1112,6 +1122,10 @@ PrefabInstance:
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: airSpeedupKoefficient
       value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: jumpPowerupActiveTime
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: 'animations.Array.data[0]'
