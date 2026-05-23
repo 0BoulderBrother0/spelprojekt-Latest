@@ -14,6 +14,17 @@ public class PlatformHelpScript : MonoBehaviour
         rb = GetComponentInParent<Rigidbody2D>();
     }
 
+    void FixedUpdate()
+    {
+        if (restrictVelocity == null) return;
+
+        if (rightTouching && rb.linearVelocityX < 0)
+            rb.linearVelocityX = 0;
+
+        if (leftTouching && rb.linearVelocityX > 0)
+            rb.linearVelocityX = 0;
+    }
+
     public void TriggerPlatformHelp()
     {
         if (leftTouching != rightTouching && rb.linearVelocityY <= 0)
@@ -26,6 +37,7 @@ public class PlatformHelpScript : MonoBehaviour
             {
                 rb.AddForceX(PlayerScript.towardsPlatformBoost * Time.deltaTime);
             }
+
             rb.AddForceY(PlayerScript.platformBoost * Time.deltaTime);
 
 
@@ -37,26 +49,13 @@ public class PlatformHelpScript : MonoBehaviour
 
     IEnumerator RestrictVelocity()
     {
-        Debug.Log("Started RestrictVelocity!");
-
-        bool wasLeft = leftTouching;
-        bool wasRight = rightTouching;
-
         while (true)
         {
-            if (wasRight && rb.linearVelocityX < 0)
-                rb.linearVelocityX = 0;
-
-            if (wasLeft && rb.linearVelocityX > 0)
-                rb.linearVelocityX = 0;
-
             if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= PlayerScript.standStillThreshold)
             {
-                Debug.Log("Stopped RestrictVelocity");
                 restrictVelocity = null;
                 yield break;
             }
-
             yield return null;
         }
     }

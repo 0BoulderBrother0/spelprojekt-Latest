@@ -32,16 +32,23 @@ public class PlayerScript : MonoBehaviour
     public float airSpeedupKoefficient;
     public float groundSlowdownKoefficient;
 
+    [Header("End/Resume Game")]
     public static bool endGame;
+    public float loseAppearTime;
     public static bool resumeGame;
     bool underScreen;
     public float SecondsBeforeDeath;
     Coroutine startEndGame;
 
-    Coroutine jumpPowerupActive;
+
+    [Header("Jump Powerup")]
+    public Coroutine jumpPowerupActive;
+    Coroutine fadeIcon;
     public float jumpPowerupActiveTime;
     float jumpBoost = 1;
-    public float jumpPowerup;
+    public float jumpPowerupBoost;
+    int jumpBonus = 0;
+    public int jumpPowerupBonusScore = 1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -80,8 +87,8 @@ public class PlayerScript : MonoBehaviour
             //Debug.Log($"hasJumped: {hasJumped}");
             if (currentPlatformCollider != null)
             {
-                nbrOfPlatforms++;
-                GUIScript.tmp.text = $"Score: {nbrOfPlatforms}";
+                nbrOfPlatforms += 1 + jumpBonus;
+                GUIScript.score.text = $"Score: {nbrOfPlatforms}";
 
                 pms.platformsColliders.Remove(currentPlatformCollider);
                 currentPlatformCollider = null;
@@ -196,6 +203,17 @@ public class PlayerScript : MonoBehaviour
 
     void EndGame()
     {
+        Color cScore = GUIScript.score.color;
+        Color cJumpPowerup = GUIScript.jumpPowerup.color;
+        cScore.a = 0f;
+        cJumpPowerup.a = 0f;
+        GUIScript.score.color = cScore;
+        GUIScript.jumpPowerup.color = cJumpPowerup;
+
+        StopAllCoroutines();
+
+        GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
+        
         Destroy(gameObject);
     }
 
@@ -220,13 +238,31 @@ public class PlayerScript : MonoBehaviour
 
     IEnumerator JumpPowerup()
     {
-        jumpBoost = jumpPowerup;
+        Color c = GUIScript.jumpPowerup.color;
+        c.a = 1f;
+        GUIScript.jumpPowerup.color = c;
+
+        if (fadeIcon != null)
+        {
+            StopCoroutine(fadeIcon);
+            fadeIcon = StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
+        }
+        else
+        {
+            fadeIcon = StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
+        }
+
+
+        jumpBoost = jumpPowerupBoost;
+        jumpBonus = jumpPowerupBonusScore;
 
         Debug.Log("Activated jump powerup!");
 
         yield return new WaitForSeconds(jumpPowerupActiveTime);
+
         jumpPowerupActive = null;
         jumpBoost = 1;
+        jumpBonus = 0;
 
         Debug.Log("Disabled jump powerup");
     }

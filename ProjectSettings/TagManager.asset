@@ -9,6 +9,9 @@ TagManager:
   - PlatformHelpColliderLeft
   - PlatformHelpColliderRight
   - JumpPowerup
+  - JumpPowerupUI
+  - ScoreUI
+  - LoseUI
   layers:
   - Default
   - TransparentFX

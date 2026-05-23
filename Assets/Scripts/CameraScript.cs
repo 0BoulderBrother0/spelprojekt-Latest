@@ -69,8 +69,13 @@ public class CameraScript : MonoBehaviour
             playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
 
             float threshold = screenHeight - (ThresholdToMove * ps.playerHeight);
-    
-            if (playerCameraVector.y >= threshold)
+
+            if (ps.jumpPowerupActive != null && playerCameraVector.y >= threshold)
+            {
+                overstepDistance = playerCameraVector.y - (threshold * ps.jumpPowerupBoost);
+                currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor * ps.jumpPowerupBoost);
+            }
+            else if (playerCameraVector.y >= threshold)
             {
                 overstepDistance = playerCameraVector.y - threshold;
                 currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
