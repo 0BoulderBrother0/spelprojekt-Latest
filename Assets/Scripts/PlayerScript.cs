@@ -159,7 +159,7 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed * airSpeedupKoefficient, ForceMode2D.Force);
         }
 
-        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) == 0)
+        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
         {
             rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient * Time.fixedDeltaTime);
         }
