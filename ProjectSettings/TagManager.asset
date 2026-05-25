@@ -12,6 +12,8 @@ TagManager:
   - JumpPowerupUI
   - ScoreUI
   - LoseUI
+  - InvincibilityPowerup
+  - InvincibilityPowerupUI
   layers:
   - Default
   - TransparentFX

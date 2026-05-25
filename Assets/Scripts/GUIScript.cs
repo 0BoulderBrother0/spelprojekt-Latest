@@ -11,6 +11,7 @@ public class GUIScript : MonoBehaviour
     public static GUIScript instance;
 
     public static Image jumpPowerup;
+    public static Image invincibilityPowerup;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -20,6 +21,9 @@ public class GUIScript : MonoBehaviour
         {
             if (child.CompareTag("JumpPowerupUI"))
                 jumpPowerup = child.GetComponent<Image>();
+
+            if (child.CompareTag("InvincibilityPowerupUI"))
+                invincibilityPowerup = child.GetComponent<Image>();
 
             if (child.CompareTag("ScoreUI"))
                 score = child.GetComponent<TextMeshProUGUI>();

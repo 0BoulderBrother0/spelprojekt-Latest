@@ -25,7 +25,7 @@ public class PlatformManagerScript : MonoBehaviour
     bool isReady;
 
     [Header("Powerup")]
-    public GameObject jumpPowerupObject;
+    public GameObject[] powerupObjects;
     public float lengthAbovePlatform = 1;
 
     IEnumerator Start()
@@ -123,7 +123,8 @@ public class PlatformManagerScript : MonoBehaviour
         float spawnPositionX = platformObject.transform.position.x + Random.Range(-platformDimensions[0], platformDimensions[0]);
         float spawnPositionY = platformObject.transform.position.y + platformDimensions[1] + lengthAbovePlatform;
 
-        Instantiate(jumpPowerupObject, new Vector2(spawnPositionX, spawnPositionY), Quaternion.identity);
+        int powerupObjectIndex = Random.Range(0, powerupObjects.Length);
+        Instantiate(powerupObjects[powerupObjectIndex], new Vector2(spawnPositionX, spawnPositionY), Quaternion.identity);
     }
 }
 

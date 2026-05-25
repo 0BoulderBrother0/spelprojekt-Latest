@@ -41,14 +41,21 @@ public class PlayerScript : MonoBehaviour
     Coroutine startEndGame;
 
 
-    [Header("Jump Powerup")]
+    [Header("Powerup")]
     public Coroutine jumpPowerupActive;
-    Coroutine fadeIcon;
+    Coroutine fadeIconJump;
     public float jumpPowerupActiveTime;
     float jumpBoost = 1;
     public float jumpPowerupBoost;
     int jumpBonus = 0;
     public int jumpPowerupBonusScore = 1;
+
+    public Coroutine invincibilityPowerupActive;
+    Coroutine fadeIconInvincibility;
+    public float invincibilityPowerupActiveTime;
+    bool avoidScreenEdges;
+    public float avoidScreenForceY;
+    public float avoidScreenForceX;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -199,6 +206,21 @@ public class PlayerScript : MonoBehaviour
                 jumpPowerupActive = StartCoroutine(JumpPowerup());
             }
         }
+
+        if (collision.CompareTag("InvincibilityPowerup"))
+        {
+            Destroy(collision.gameObject);
+            if (invincibilityPowerupActive == null)
+            {
+                invincibilityPowerupActive = StartCoroutine(InvincibilityPowerup());
+            }
+
+            else
+            {
+                StopCoroutine(invincibilityPowerupActive);
+                invincibilityPowerupActive = StartCoroutine(InvincibilityPowerup());
+            }
+        }
     }
 
     void EndGame()
@@ -210,7 +232,7 @@ public class PlayerScript : MonoBehaviour
         GUIScript.score.color = cScore;
         GUIScript.jumpPowerup.color = cJumpPowerup;
 
-        StopAllCoroutines();
+        GUIScript.instance.StopAllCoroutines();
 
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
         
@@ -242,14 +264,14 @@ public class PlayerScript : MonoBehaviour
         c.a = 1f;
         GUIScript.jumpPowerup.color = c;
 
-        if (fadeIcon != null)
+        if (fadeIconJump != null)
         {
-            StopCoroutine(fadeIcon);
-            fadeIcon = StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
+            GUIScript.instance.StopCoroutine(fadeIconJump);
+            fadeIconJump = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
         }
         else
         {
-            fadeIcon = StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
+            fadeIconJump = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
         }
 
 
@@ -267,5 +289,60 @@ public class PlayerScript : MonoBehaviour
         Debug.Log("Disabled jump powerup");
     }
 
+    IEnumerator InvincibilityPowerup()
+    {
+        Color c = GUIScript.invincibilityPowerup.color;
+        c.a = 1f;
+        GUIScript.invincibilityPowerup.color = c;
+
+        if (fadeIconInvincibility != null)
+        {
+            GUIScript.instance.StopCoroutine(fadeIconInvincibility);
+            fadeIconInvincibility = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.invincibilityPowerup, invincibilityPowerupActiveTime));
+        }
+        else
+        {
+            fadeIconInvincibility = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.invincibilityPowerup, invincibilityPowerupActiveTime));
+        }
+
+
+
+        avoidScreenEdges = true;
+        StartCoroutine(AvoidScreenEdges());
+
+        Debug.Log("Activated invincibility powerup!");
+
+        yield return new WaitForSeconds(invincibilityPowerupActiveTime);
+
+        avoidScreenEdges = false;
+
+        Debug.Log("Disabled invincibility powerup");
+    }
+
+    IEnumerator AvoidScreenEdges()
+    {
+        while (avoidScreenEdges)
+        {
+            Vector2 camPos = Camera.main.transform.position;
+
+
+            if (Mathf.Abs(transform.position.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
+            {
+                if (transform.position.x < 0)
+                    rb.AddForceX(avoidScreenForceX, ForceMode2D.Force);
+
+                else
+                    rb.AddForceX(-avoidScreenForceX, ForceMode2D.Force);
+            }
+
+
+            if (transform.position.y - playerHeight <= camPos.y - CameraScript.screenHeight)
+                rb.AddForceY(avoidScreenForceY, ForceMode2D.Force);
+
+
+            yield return null;
+        }
+        yield break;
+    }
 
 }
