@@ -168,7 +168,7 @@ public class PlayerScript : MonoBehaviour
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
         {
-            rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient * Time.fixedDeltaTime);
+            rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient);
         }
     }
 
