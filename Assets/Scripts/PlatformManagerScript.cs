@@ -67,7 +67,8 @@ public class PlatformManagerScript : MonoBehaviour
 
                         foreach (GameObject platform in spawnedPlatforms)
                         {
-                            if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < originalPlatformWidth * 2 * platformMaxScale)
+                            float[] platformDimensions = FindObjectDimensions(platform);
+                            if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < platformDimensions[0] * 2)
                             {
                                 overlapping = true;
                                 break;
@@ -103,7 +104,7 @@ public class PlatformManagerScript : MonoBehaviour
         
     }
 
-    float[] FindObjectDimensions(GameObject gameObject)
+    public float[] FindObjectDimensions(GameObject gameObject)
     {
         SpriteRenderer[] srArray = gameObject.GetComponentsInChildren<SpriteRenderer>();
 

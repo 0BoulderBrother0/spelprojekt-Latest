@@ -9,6 +9,7 @@ public class PlayerScript : MonoBehaviour
     public SpriteRenderer[] animations;
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
+    float[] currentPlatformDimensions;
     float xAxis;
     int nbrOfPlatforms;
 
@@ -56,6 +57,8 @@ public class PlayerScript : MonoBehaviour
     bool avoidScreenEdges;
     public float avoidScreenForceY;
     public float avoidScreenForceX;
+    public float goThroughGroundDuration = 0.5f;
+    public float goThroughGroundThreshold = 1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,6 +66,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         pms = GameObject.FindGameObjectWithTag("PlatformManager").GetComponent<PlatformManagerScript>();
+
 
         playerHeight = sr.bounds.extents.y;
         playerWidth = sr.bounds.extents.x;
@@ -78,13 +82,14 @@ public class PlayerScript : MonoBehaviour
         playerPos = transform.position;
 
         if (rb.linearVelocityX < -standStillThreshold)
-        {
             sr.flipX = true;
-        }
         else if (rb.linearVelocityX > standStillThreshold)
-        {
             sr.flipX = false;
-        }
+
+        if (rb.linearVelocityY >= standStillThreshold)
+            sr.sprite = animations[2].sprite;
+        if (rb.linearVelocityY < standStillThreshold)
+            sr.sprite = animations[3].sprite;
 
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
@@ -104,20 +109,13 @@ public class PlayerScript : MonoBehaviour
             sr.sprite = animations[0].sprite;
 
             if (xAxis < 0)
-            {
                 sr.flipX = true;
-            }
             else if (xAxis > 0)
-            {
                 sr.flipX = false;
-            }
         }
-
 
         if (Input.GetKey(KeyCode.Space) && !hasJumped)
-        {
             sr.sprite = animations[1].sprite;
-        }
 
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
         {
@@ -131,27 +129,12 @@ public class PlayerScript : MonoBehaviour
         }
 
 
-        if (hasJumped)
-        {
-            if (rb.linearVelocityY >= standStillThreshold)
-            {
-                sr.sprite = animations[2].sprite;
-            }
-            else
-            {
-                sr.sprite = animations[3].sprite;
-            }
-        }
-
-
         if (playerPos.y + playerHeight <= Camera.main.transform.position.y - CameraScript.screenHeight && !underScreen)
         {
             Debug.Log("Started EndGame");
             underScreen = true;
             if (startEndGame == null)
-            {
                 startEndGame = StartCoroutine(StartEndGame());
-            }
             else
             {
                 StopCoroutine(startEndGame);
@@ -169,25 +152,32 @@ public class PlayerScript : MonoBehaviour
     void FixedUpdate()
     {
         if (hasJumped)
-        {
             rb.AddForceX(xAxis * moveSpeed * airSpeedupKoefficient, ForceMode2D.Force);
-        }
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
-        {
             rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient);
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("Ground"))
         {
+            currentPlatformDimensions = pms.FindObjectDimensions(collision.gameObject);
             if (pms.platformsColliders.Contains(collision.collider) && GroundCheckScript.isOnGround)
             {
                 currentPlatformCollider = collision.collider;
             }
         }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+            if (Mathf.Abs(collision.transform.position.x - playerPos.x) < currentPlatformDimensions[0] * 2 && hasJumped)
+            {
+                Debug.Log("Inside platform!");
+                insidePlatform = true;
+            }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -196,9 +186,7 @@ public class PlayerScript : MonoBehaviour
         {
             Destroy(collision.gameObject);
             if (jumpPowerupActive == null)
-            {
                 jumpPowerupActive = StartCoroutine(JumpPowerup());
-            }
 
             else
             {
@@ -211,15 +199,22 @@ public class PlayerScript : MonoBehaviour
         {
             Destroy(collision.gameObject);
             if (invincibilityPowerupActive == null)
-            {
                 invincibilityPowerupActive = StartCoroutine(InvincibilityPowerup());
-            }
 
             else
             {
                 StopCoroutine(invincibilityPowerupActive);
                 invincibilityPowerupActive = StartCoroutine(InvincibilityPowerup());
             }
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            Debug.Log("Outside platform!");
+            insidePlatform = false;
         }
     }
 
@@ -235,7 +230,7 @@ public class PlayerScript : MonoBehaviour
         GUIScript.instance.StopAllCoroutines();
 
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
-        
+
         Destroy(gameObject);
     }
 
@@ -270,9 +265,7 @@ public class PlayerScript : MonoBehaviour
             fadeIconJump = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
         }
         else
-        {
             fadeIconJump = GUIScript.instance.StartCoroutine(GUIScript.FadeIcon(GUIScript.jumpPowerup, jumpPowerupActiveTime));
-        }
 
 
         jumpBoost = jumpPowerupBoost;
@@ -326,9 +319,16 @@ public class PlayerScript : MonoBehaviour
             Vector2 camPos = Camera.main.transform.position;
 
 
-            if (Mathf.Abs(transform.position.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
+            if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
+                StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));
+
+            if (Mathf.Abs(playerPos.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
             {
-                if (transform.position.x < 0)
+                if (PlatformHelpScript.restrictVelocity != null)
+                    StopCoroutine(PlatformHelpScript.restrictVelocity);
+
+
+                if (playerPos.x < 0)
                     rb.AddForceX(avoidScreenForceX, ForceMode2D.Force);
 
                 else
@@ -336,13 +336,44 @@ public class PlayerScript : MonoBehaviour
             }
 
 
-            if (transform.position.y - playerHeight <= camPos.y - CameraScript.screenHeight)
+            if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
+            {
+                if (PlatformHelpScript.restrictVelocity != null)
+                    StopCoroutine(PlatformHelpScript.restrictVelocity);
+
                 rb.AddForceY(avoidScreenForceY, ForceMode2D.Force);
+            }
+
 
 
             yield return null;
         }
         yield break;
+    }
+
+    IEnumerator TemporarilyIgnoreGround(float duration)
+    {
+        int playerLayer = gameObject.layer;
+        int groundLayer = LayerMask.NameToLayer("Ground");
+
+        Color c = sr.color;
+        c.a = 0.7f;
+        sr.color = c;
+
+
+        Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, true);
+
+        Debug.Log("Going through ground!");
+
+        yield return new WaitForSeconds(duration);
+
+        c.a = 1f;
+        sr.color = c;
+
+
+        Debug.Log("Stopped going through ground");
+
+        Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, false);
     }
 
 }

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5017711995694153569}
   - component: {fileID: 2748186002375483644}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: terrain_dirt_cloud_left_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 4376594783561724431}
   - component: {fileID: 4513015107545815385}
   - component: {fileID: 4524909210904150267}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Platform
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -216,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 207569520358570250}
   - component: {fileID: 6068877081581039107}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: terrain_dirt_cloud_right_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -306,7 +306,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1197298298347201844}
   - component: {fileID: 5644183906492776292}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: terrain_dirt_cloud_middle_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

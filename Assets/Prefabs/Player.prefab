@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8641154970961562503}
   - component: {fileID: 1444912380234529108}
   - component: {fileID: 6399154357436865978}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: GroundCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   - component: {fileID: 888999131552262705}
   - component: {fileID: 100580963062601459}
   - component: {fileID: 2368963883644655287}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlatformHelpColliderLeft
   m_TagString: PlatformHelpColliderLeft
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4095922950803999661}
   - component: {fileID: 1152995221437436088}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlatformHelp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 1382276090729483811}
   - component: {fileID: 6234027290567965738}
   - component: {fileID: 4514893189215030994}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -415,9 +415,16 @@ MonoBehaviour:
   jumpHeight: 13
   airSpeedupKoefficient: 0
   groundSlowdownKoefficient: 0
+  loseAppearTime: 0
   SecondsBeforeDeath: 5
   jumpPowerupActiveTime: 0
   jumpPowerupBoost: 0
+  jumpPowerupBonusScore: 1
+  invincibilityPowerupActiveTime: 0
+  avoidScreenForceY: 0
+  avoidScreenForceX: 0
+  goThroughGroundDuration: 0.5
+  goThroughGroundThreshold: 1
 --- !u!1 &6633439441432527715
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +436,7 @@ GameObject:
   - component: {fileID: 3710653797377047512}
   - component: {fileID: 3173845846614192322}
   - component: {fileID: 835103706498435054}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PlatformHelpColliderRight
   m_TagString: PlatformHelpColliderRight
   m_Icon: {fileID: 0}

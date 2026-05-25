@@ -27,16 +27,13 @@ public class PlatformHelpScript : MonoBehaviour
 
     public void TriggerPlatformHelp()
     {
-        if (leftTouching != rightTouching && rb.linearVelocityY <= 0)
+        if (leftTouching != rightTouching && rb.linearVelocityY <= 0 && !PlayerScript.insidePlatform)
         {
             if (leftTouching)
-            {
                 rb.AddForceX(-PlayerScript.towardsPlatformBoost * Time.deltaTime);
-            }
             else
-            {
                 rb.AddForceX(PlayerScript.towardsPlatformBoost * Time.deltaTime);
-            }
+
 
             rb.AddForceY(PlayerScript.platformBoost * Time.deltaTime);
 
@@ -47,7 +44,7 @@ public class PlatformHelpScript : MonoBehaviour
     }
 
 
-    IEnumerator RestrictVelocity()
+    public IEnumerator RestrictVelocity()
     {
         while (true)
         {
