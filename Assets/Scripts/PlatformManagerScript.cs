@@ -27,6 +27,7 @@ public class PlatformManagerScript : MonoBehaviour
     [Header("Powerup")]
     public GameObject[] powerupObjects;
     public float lengthAbovePlatform = 1;
+    public float chanceToSpawnPowerup = 0.1f;
 
     IEnumerator Start()
     {
@@ -88,7 +89,9 @@ public class PlatformManagerScript : MonoBehaviour
                         GameObject newPlatform = Instantiate(platformObject, new Vector2(newPlatformPositionX, CameraScript.screenHeight + originalPlatformHeight + cam.transform.position.y), Quaternion.identity);
                         spawnedPlatforms.Add(newPlatform);
 
-                        SpawnPowerup(newPlatform);
+                        int maxRange = Mathf.RoundToInt(1 / chanceToSpawnPowerup);
+                        if (Random.Range(0, maxRange) == 0)
+                            SpawnPowerup(newPlatform);
 
                         platformsColliders.Add(newPlatform.GetComponent<Collider2D>());
                     }

@@ -163,21 +163,21 @@ public class PlayerScript : MonoBehaviour
         if (collision.collider.CompareTag("Ground"))
         {
             currentPlatformDimensions = pms.FindObjectDimensions(collision.gameObject);
+
+            if (Mathf.Abs(collision.transform.position.x - playerPos.x) < currentPlatformDimensions[0] * 2 && playerPos.y + playerHeight <= collision.transform.position.y && hasJumped)
+            {
+                Debug.Log("Inside platform!");
+                insidePlatform = true;
+
+                if (PlatformHelpScript.restrictVelocity != null)
+                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
+            }
+
             if (pms.platformsColliders.Contains(collision.collider) && GroundCheckScript.isOnGround)
             {
                 currentPlatformCollider = collision.collider;
             }
         }
-    }
-
-    void OnCollisionStay2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Ground"))
-            if (Mathf.Abs(collision.transform.position.x - playerPos.x) < currentPlatformDimensions[0] * 2 && hasJumped)
-            {
-                Debug.Log("Inside platform!");
-                insidePlatform = true;
-            }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -319,13 +319,13 @@ public class PlayerScript : MonoBehaviour
             Vector2 camPos = Camera.main.transform.position;
 
 
-            if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
-                StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));
+            /*if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
+                StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));*/
 
             if (Mathf.Abs(playerPos.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
             {
                 if (PlatformHelpScript.restrictVelocity != null)
-                    StopCoroutine(PlatformHelpScript.restrictVelocity);
+                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
 
 
                 if (playerPos.x < 0)
@@ -339,7 +339,7 @@ public class PlayerScript : MonoBehaviour
             if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
             {
                 if (PlatformHelpScript.restrictVelocity != null)
-                    StopCoroutine(PlatformHelpScript.restrictVelocity);
+                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
 
                 rb.AddForceY(avoidScreenForceY, ForceMode2D.Force);
             }
@@ -351,6 +351,7 @@ public class PlayerScript : MonoBehaviour
         yield break;
     }
 
+    /*
     IEnumerator TemporarilyIgnoreGround(float duration)
     {
         int playerLayer = gameObject.layer;
@@ -374,6 +375,6 @@ public class PlayerScript : MonoBehaviour
         Debug.Log("Stopped going through ground");
 
         Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, false);
-    }
+    }*/
 
 }

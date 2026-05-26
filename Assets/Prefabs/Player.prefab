@@ -168,7 +168,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.85, y: 1.2}
+  m_Size: {x: 0.85, y: 0.8}
   m_EdgeRadius: 0
 --- !u!114 &2368963883644655287
 MonoBehaviour:
@@ -409,21 +409,21 @@ MonoBehaviour:
   playerHeight: 0
   playerWidth: 0
   playerPos: {x: 0, y: 0}
-  platformHelpBoost: 15000
-  towardsPlatformHelpBoost: 10000
-  moveSpeed: 4
+  platformHelpBoost: 20000
+  towardsPlatformHelpBoost: 8000
+  moveSpeed: 6
   jumpHeight: 13
-  airSpeedupKoefficient: 0
-  groundSlowdownKoefficient: 0
+  airSpeedupKoefficient: 1.1
+  groundSlowdownKoefficient: 9
   loseAppearTime: 0
-  SecondsBeforeDeath: 5
-  jumpPowerupActiveTime: 0
-  jumpPowerupBoost: 0
+  SecondsBeforeDeath: 3
+  jumpPowerupActiveTime: 6
+  jumpPowerupBoost: 1.5
   jumpPowerupBonusScore: 1
-  invincibilityPowerupActiveTime: 0
-  avoidScreenForceY: 0
-  avoidScreenForceX: 0
-  goThroughGroundDuration: 0.5
+  invincibilityPowerupActiveTime: 6
+  avoidScreenForceY: 22
+  avoidScreenForceX: 10
+  goThroughGroundDuration: 2
   goThroughGroundThreshold: 1
 --- !u!1 &6633439441432527715
 GameObject:
@@ -502,7 +502,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.85, y: 1.2}
+  m_Size: {x: 0.85, y: 0.8}
   m_EdgeRadius: 0
 --- !u!114 &835103706498435054
 MonoBehaviour:

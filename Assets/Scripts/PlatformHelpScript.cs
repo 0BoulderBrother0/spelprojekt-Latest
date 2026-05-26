@@ -7,10 +7,12 @@ public class PlatformHelpScript : MonoBehaviour
     public bool leftTouching;
     public bool rightTouching;
     public static Coroutine restrictVelocity;
+    public static PlatformHelpScript instance;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        instance = this;
         rb = GetComponentInParent<Rigidbody2D>();
     }
 
@@ -30,16 +32,18 @@ public class PlatformHelpScript : MonoBehaviour
         if (leftTouching != rightTouching && rb.linearVelocityY <= 0 && !PlayerScript.insidePlatform)
         {
             if (leftTouching)
-                rb.AddForceX(-PlayerScript.towardsPlatformBoost * Time.deltaTime);
+                rb.AddForceX(-PlayerScript.towardsPlatformBoost);
             else
-                rb.AddForceX(PlayerScript.towardsPlatformBoost * Time.deltaTime);
+                rb.AddForceX(PlayerScript.towardsPlatformBoost);
 
 
-            rb.AddForceY(PlayerScript.platformBoost * Time.deltaTime);
+            rb.AddForceY(PlayerScript.platformBoost);
 
 
             if (restrictVelocity == null)
                 restrictVelocity = StartCoroutine(RestrictVelocity());
+
+            Debug.Log("Triggered platform help!");
         }
     }
 
