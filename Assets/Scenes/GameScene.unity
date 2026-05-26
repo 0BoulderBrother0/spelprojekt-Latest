@@ -162,6 +162,7 @@ MonoBehaviour:
   - {fileID: 7823154616337670662, guid: e83bd9c3b97c3d4489ef37de41db3fbe, type: 3}
   - {fileID: 1782393013225947091, guid: 356ed0f64be1627428bad0102f888bcf, type: 3}
   lengthAbovePlatform: 1.5
+  chanceToSpawnPowerup: 0.2
 --- !u!4 &26548572
 Transform:
   m_ObjectHideFlags: 0
@@ -1390,52 +1391,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: moveSpeed
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: jumpPowerup
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: airKoefficient
-      value: 80
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: jumpPowerupBoost
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: avoidScreenForceX
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: avoidScreenForceY
-      value: 25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: groundKoefficient
-      value: 1
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: platformHelpBoost
-      value: 20000
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: SecondsBeforeDeath
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: airSpeedupKoefficient
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: jumpPowerupActiveTime
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: goThroughGroundDuration
-      value: 2
+      propertyPath: insidePlatformThreshold
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: 'animations.Array.data[0]'
@@ -1454,24 +1419,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 218216007}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: goThroughGroundThreshold
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: towardsPlatformHelpBoost
-      value: 8000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: groundSlowdownKoefficient
-      value: 9
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: invincibilityPowerupActiveTime
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: secondsDisabledAfterPlatformHelp
-      value: 1
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name
