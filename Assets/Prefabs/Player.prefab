@@ -409,22 +409,24 @@ MonoBehaviour:
   playerHeight: 0
   playerWidth: 0
   playerPos: {x: 0, y: 0}
-  platformHelpBoost: 20000
-  towardsPlatformHelpBoost: 8000
+  playerStandStillThreshold: 0.01
+  platformHelpBoost: 400
+  towardsPlatformHelpBoost: 100
   moveSpeed: 6
-  jumpHeight: 13
+  maxJumpHeight: 13.5
+  jumpToMaxJumpHeightKoefficient: 0.11
   airSpeedupKoefficient: 1.1
-  groundSlowdownKoefficient: 9
-  loseAppearTime: 0
+  groundSlowdownKoefficient: 11
+  loseAppearTime: 2
   SecondsBeforeDeath: 3
   jumpPowerupActiveTime: 6
   jumpPowerupBoost: 1.5
   jumpPowerupBonusScore: 1
-  invincibilityPowerupActiveTime: 6
-  avoidScreenForceY: 22
-  avoidScreenForceX: 10
+  invincibilityPowerupActiveTime: 9
+  avoidScreenForceY: 1.1
+  avoidScreenForceX: 12
   goThroughGroundDuration: 2
-  goThroughGroundThreshold: 1
+  goThroughGroundThreshold: 1.5
 --- !u!1 &6633439441432527715
 GameObject:
   m_ObjectHideFlags: 0

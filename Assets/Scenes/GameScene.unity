@@ -1392,16 +1392,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: avoidScreenForceY
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: platformHelpBoost
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: insidePlatformThreshold
-      value: -2
+      propertyPath: goThroughGroundDuration
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: 'animations.Array.data[0]'
@@ -1420,12 +1412,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 218216007}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: towardsPlatformHelpBoost
-      value: 100
+      propertyPath: goThroughGroundThreshold
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: invincibilityPowerupActiveTime
-      value: 9
+      propertyPath: playerStandStillThreshold
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name
