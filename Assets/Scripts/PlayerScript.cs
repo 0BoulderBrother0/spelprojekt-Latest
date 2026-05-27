@@ -18,7 +18,8 @@ public class PlayerScript : MonoBehaviour
     public float playerWidth;
     public Vector2 playerPos;
     public static bool hasJumped;
-    public static float standStillThreshold = 0.1f;
+    public static float standStillThreshold;
+    public float playerStandStillThreshold;
 
     [Header("Platform Help")]
     public float platformHelpBoost;
@@ -30,6 +31,7 @@ public class PlayerScript : MonoBehaviour
     [Header("Speed")]
     public float moveSpeed;
     public float maxJumpHeight;
+    public float jumpToMaxJumpHeightKoefficient;
     float jumpHeight;
     public float airSpeedupKoefficient;
     public float groundSlowdownKoefficient;
@@ -55,7 +57,7 @@ public class PlayerScript : MonoBehaviour
     public Coroutine invincibilityPowerupActive;
     Coroutine fadeIconInvincibility;
     Coroutine temporarilyIgnoreGround;
-    bool ignoreGround;
+    public static bool ignoreGround;
     public float invincibilityPowerupActiveTime;
     bool avoidScreenEdges;
     public float avoidScreenForceY;
@@ -63,7 +65,7 @@ public class PlayerScript : MonoBehaviour
     public float goThroughGroundDuration = 0.5f;
     public float goThroughGroundThreshold = 1;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -76,9 +78,11 @@ public class PlayerScript : MonoBehaviour
 
         platformBoost = platformHelpBoost;
         towardsPlatformBoost = towardsPlatformHelpBoost;
+
+        standStillThreshold = playerStandStillThreshold;
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         xAxis = Input.GetAxisRaw("Horizontal");
@@ -98,8 +102,7 @@ public class PlayerScript : MonoBehaviour
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold && !ignoreGround)
         {
             hasJumped = false;
-            //touchedGround = true;
-            //Debug.Log($"hasJumped: {hasJumped}");
+
             if (currentPlatformCollider != null)
             {
                 nbrOfPlatforms += 1 + jumpBonus;
@@ -119,19 +122,18 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && !hasJumped)
         {
-            jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, 0.1f);
-        }
+            jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, jumpToMaxJumpHeightKoefficient);
             sr.sprite = animations[1].sprite;
+        }          
 
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
         {
             hasJumped = true;
-            //Debug.Log($"hasJumped: {hasJumped}");
 
             rb.linearVelocityY = jumpHeight * jumpBoost;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
 
-            sr.sprite = animations[2].sprite;
+            jumpHeight = 0;
         }
 
 
@@ -183,6 +185,9 @@ public class PlayerScript : MonoBehaviour
             {
                 currentPlatformCollider = collision.collider;
             }
+            if (collision.collider.CompareTag("Ground"))
+
+            Debug.Log($"Colliding with: {collision.gameObject.name}, layer: {collision.gameObject.layer}");
         }
     }
 
@@ -234,6 +239,8 @@ public class PlayerScript : MonoBehaviour
         GUIScript.jumpPowerup.color = cJumpPowerup;
 
         GUIScript.instance.StopAllCoroutines();
+        PlatformHelpScript.instance.StopAllCoroutines();
+        StopAllCoroutines();
 
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
 
@@ -359,6 +366,8 @@ public class PlayerScript : MonoBehaviour
     {
         int playerLayer = gameObject.layer;
         int groundLayer = LayerMask.NameToLayer("Ground");
+        Debug.Log($"Player layer: {playerLayer}, Ground layer: {groundLayer}");
+
 
         Color c = sr.color;
         c.a = 0.7f;
@@ -366,6 +375,7 @@ public class PlayerScript : MonoBehaviour
 
 
         Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, true);
+        Debug.Log($"Ignoring collision between layers {playerLayer} and {groundLayer}");
 
         ignoreGround = true;
         hasJumped = true;
@@ -376,6 +386,8 @@ public class PlayerScript : MonoBehaviour
 
 
         ignoreGround = false;
+        temporarilyIgnoreGround = null;
+
 
         c.a = 1f;
         sr.color = c;

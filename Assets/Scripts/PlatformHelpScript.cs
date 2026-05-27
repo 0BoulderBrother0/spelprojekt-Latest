@@ -19,6 +19,7 @@ public class PlatformHelpScript : MonoBehaviour
     void FixedUpdate()
     {
         if (restrictVelocity == null) return;
+        if (PlayerScript.hasJumped) return;
 
         if (rightTouching && rb.linearVelocityX < 0)
             rb.linearVelocityX = 0;
@@ -52,7 +53,7 @@ public class PlatformHelpScript : MonoBehaviour
     {
         while (true)
         {
-            if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= PlayerScript.standStillThreshold)
+            if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= PlayerScript.standStillThreshold && !PlayerScript.ignoreGround)
             {
                 restrictVelocity = null;
                 yield break;
