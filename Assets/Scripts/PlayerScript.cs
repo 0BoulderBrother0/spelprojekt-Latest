@@ -29,7 +29,8 @@ public class PlayerScript : MonoBehaviour
 
     [Header("Speed")]
     public float moveSpeed;
-    public float jumpHeight;
+    public float maxJumpHeight;
+    float jumpHeight;
     public float airSpeedupKoefficient;
     public float groundSlowdownKoefficient;
 
@@ -53,6 +54,8 @@ public class PlayerScript : MonoBehaviour
 
     public Coroutine invincibilityPowerupActive;
     Coroutine fadeIconInvincibility;
+    Coroutine temporarilyIgnoreGround;
+    bool ignoreGround;
     public float invincibilityPowerupActiveTime;
     bool avoidScreenEdges;
     public float avoidScreenForceY;
@@ -92,7 +95,7 @@ public class PlayerScript : MonoBehaviour
             sr.sprite = animations[3].sprite;
 
 
-        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
+        if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold && !ignoreGround)
         {
             hasJumped = false;
             //touchedGround = true;
@@ -115,6 +118,9 @@ public class PlayerScript : MonoBehaviour
         }
 
         if (Input.GetKey(KeyCode.Space) && !hasJumped)
+        {
+            jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, 0.1f);
+        }
             sr.sprite = animations[1].sprite;
 
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
@@ -319,15 +325,17 @@ public class PlayerScript : MonoBehaviour
             Vector2 camPos = Camera.main.transform.position;
 
 
-            /*if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
-                StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));*/
+            if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
+            {
+                if (temporarilyIgnoreGround == null)
+                    temporarilyIgnoreGround = StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));
+
+                if (PlatformHelpScript.restrictVelocity != null)
+                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
+            }
 
             if (Mathf.Abs(playerPos.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
             {
-                if (PlatformHelpScript.restrictVelocity != null)
-                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
-
-
                 if (playerPos.x < 0)
                     rb.AddForceX(avoidScreenForceX, ForceMode2D.Force);
 
@@ -338,10 +346,7 @@ public class PlayerScript : MonoBehaviour
 
             if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
             {
-                if (PlatformHelpScript.restrictVelocity != null)
-                    PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
-
-                rb.AddForceY(avoidScreenForceY, ForceMode2D.Force);
+                rb.AddForceY(avoidScreenForceY * Mathf.Abs(camPos.y - CameraScript.screenHeight - playerPos.y - playerHeight), ForceMode2D.Impulse);
             }
 
 
@@ -350,8 +355,6 @@ public class PlayerScript : MonoBehaviour
         }
         yield break;
     }
-
-    /*
     IEnumerator TemporarilyIgnoreGround(float duration)
     {
         int playerLayer = gameObject.layer;
@@ -364,17 +367,22 @@ public class PlayerScript : MonoBehaviour
 
         Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, true);
 
+        ignoreGround = true;
+        hasJumped = true;
+
         Debug.Log("Going through ground!");
 
         yield return new WaitForSeconds(duration);
 
+
+        ignoreGround = false;
+
         c.a = 1f;
         sr.color = c;
-
 
         Debug.Log("Stopped going through ground");
 
         Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, false);
-    }*/
+    }
 
 }

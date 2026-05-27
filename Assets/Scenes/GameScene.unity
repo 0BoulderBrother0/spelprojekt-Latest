@@ -157,6 +157,7 @@ MonoBehaviour:
   maxNbrPlatformsPerBatch: 4
   distanceBetween: 5
   platformsColliders: []
+  safetyDistance: 0.05
   triesSpawningPlatform: 6
   powerupObjects:
   - {fileID: 7823154616337670662, guid: e83bd9c3b97c3d4489ef37de41db3fbe, type: 3}
@@ -1392,7 +1393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: avoidScreenForceY
-      value: 28
+      value: 1.1
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: platformHelpBoost

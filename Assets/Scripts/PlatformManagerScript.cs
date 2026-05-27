@@ -11,12 +11,11 @@ public class PlatformManagerScript : MonoBehaviour
     bool hasSpawnedPlatforms;
 
     Camera cam;
-    PlatformScript platformScript;
 
-    SpriteRenderer[] srArray;
     float originalPlatformWidth;
     float originalPlatformHeight;
     public static float platformMaxScale = 2f;
+    public float safetyDistance = 0.05f;
 
 
     int nbrTries;
@@ -68,16 +67,17 @@ public class PlatformManagerScript : MonoBehaviour
 
                         foreach (GameObject platform in spawnedPlatforms)
                         {
-                            float[] platformDimensions = FindObjectDimensions(platform);
-                            if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < platformDimensions[0] * 2)
+                            //float[] platformDimensions = FindObjectDimensions(platform);
+                            if (Mathf.Abs(newPlatformPositionX - platform.transform.position.x) < platformMaxScale * 2 + safetyDistance)
                             {
                                 overlapping = true;
+                                nbrTries++;
                                 break;
                             }
                         }
 
-                        nbrTries++;
-                        if (nbrTries >= triesSpawningPlatform)
+                        
+                        if (nbrTries >= triesSpawningPlatform && overlapping)
                         {
                             skipPlatform = true;
                             break;
