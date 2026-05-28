@@ -409,7 +409,7 @@ MonoBehaviour:
   playerHeight: 0
   playerWidth: 0
   playerPos: {x: 0, y: 0}
-  playerStandStillThreshold: 0.01
+  playerStandStillThreshold: 0.02
   platformHelpBoost: 400
   towardsPlatformHelpBoost: 100
   moveSpeed: 6
@@ -425,8 +425,8 @@ MonoBehaviour:
   invincibilityPowerupActiveTime: 9
   avoidScreenForceY: 1.1
   avoidScreenForceX: 12
-  goThroughGroundDuration: 2
-  goThroughGroundThreshold: 1.5
+  goThroughGroundDuration: 1
+  goThroughGroundThreshold: 0.13
 --- !u!1 &6633439441432527715
 GameObject:
   m_ObjectHideFlags: 0

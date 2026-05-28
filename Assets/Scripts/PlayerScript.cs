@@ -360,7 +360,6 @@ public class PlayerScript : MonoBehaviour
 
             yield return null;
         }
-        yield break;
     }
     IEnumerator TemporarilyIgnoreGround(float duration)
     {
