@@ -154,11 +154,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   platformObject: {fileID: 3389522379096500041, guid: 6208559abeca3c74394752206275920f, type: 3}
-  maxNbrPlatformsPerBatch: 4
+  maxNbrPlatformsPerBatch: 3
   distanceBetween: 5
   platformsColliders: []
-  safetyDistance: 0.05
-  triesSpawningPlatform: 6
+  safetyDistance: 2
+  triesSpawningPlatform: 4
   powerupObjects:
   - {fileID: 7823154616337670662, guid: e83bd9c3b97c3d4489ef37de41db3fbe, type: 3}
   - {fileID: 1782393013225947091, guid: 356ed0f64be1627428bad0102f888bcf, type: 3}
@@ -605,6 +605,7 @@ MonoBehaviour:
   baseCameraSpeed: 0.7
   playerMoveFactor: 1
   ThresholdToMove: 7
+  speedScoreKoefficient: 100
   gameOverSlowdown: 0.5
   resumeGameSpeedup: 2.3
   resumeGameBaseSpeedThreshold: 0.001
@@ -785,7 +786,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 000000005570c490
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -1392,8 +1393,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: goThroughGroundDuration
-      value: 1
+      propertyPath: maxJumpHeight
+      value: 13.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: jumpPowerupBoost
+      value: 1.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: avoidScreenForceX
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: avoidScreenForceY
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: jumpPowerupBonusScore
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: 'animations.Array.data[0]'
@@ -1412,12 +1429,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 218216007}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: goThroughGroundThreshold
-      value: 0.13
+      propertyPath: groundSlowdownKoefficient
+      value: 172
       objectReference: {fileID: 0}
     - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
-      propertyPath: playerStandStillThreshold
-      value: 0.02
+      propertyPath: jumpToMaxJumpHeightKoefficient
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514893189215030994, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
+      propertyPath: avoidScreenToPlayerVectorForceIncrease
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: 6571330578660477269, guid: 2191a8ea33443e24e8264b6f9a24173c, type: 3}
       propertyPath: m_Name

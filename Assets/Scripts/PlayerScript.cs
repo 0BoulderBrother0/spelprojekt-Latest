@@ -11,7 +11,7 @@ public class PlayerScript : MonoBehaviour
     Collider2D currentPlatformCollider;
     float[] currentPlatformDimensions;
     float xAxis;
-    int nbrOfPlatforms;
+    public static int nbrOfPlatforms;
 
     [Header("Player")]
     public float playerHeight;
@@ -61,6 +61,7 @@ public class PlayerScript : MonoBehaviour
     public float invincibilityPowerupActiveTime;
     bool avoidScreenEdges;
     public float avoidScreenForceY;
+    public float avoidScreenToPlayerVectorForceIncrease;
     public float avoidScreenForceX;
     public float goThroughGroundDuration = 0.5f;
     public float goThroughGroundThreshold = 1;
@@ -122,7 +123,7 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space) && !hasJumped)
         {
-            jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, jumpToMaxJumpHeightKoefficient);
+            jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, jumpToMaxJumpHeightKoefficient * Time.deltaTime);
             sr.sprite = animations[1].sprite;
         }          
 
@@ -163,7 +164,7 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed * airSpeedupKoefficient, ForceMode2D.Force);
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold)
-            rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient);
+            rb.linearVelocityX = Mathf.Lerp(rb.linearVelocityX, 0, groundSlowdownKoefficient * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -353,7 +354,7 @@ public class PlayerScript : MonoBehaviour
 
             if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
             {
-                rb.AddForceY(avoidScreenForceY * Mathf.Abs(camPos.y - CameraScript.screenHeight - playerPos.y - playerHeight), ForceMode2D.Impulse);
+                rb.AddForceY(avoidScreenForceY + Mathf.Abs(camPos.y - CameraScript.screenHeight - playerPos.y - playerHeight) * avoidScreenToPlayerVectorForceIncrease, ForceMode2D.Force);
             }
 
 

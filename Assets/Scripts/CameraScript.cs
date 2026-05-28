@@ -7,6 +7,7 @@ public class CameraScript : MonoBehaviour
     public float baseCameraSpeed;
     public float playerMoveFactor;
     public float ThresholdToMove = 7;
+    public float speedScoreKoefficient = 100;
 
     float currentCameraSpeed;
     public float gameOverSlowdown = 0.1f;
@@ -86,7 +87,7 @@ public class CameraScript : MonoBehaviour
             }
         }
 
-        transform.position += new Vector3(0, currentCameraSpeed, 0) * Time.deltaTime;
+        transform.position += new Vector3(0, currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient, 0) * Time.deltaTime;
     }
 
 }
