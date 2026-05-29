@@ -5,12 +5,16 @@ public class CameraScript : MonoBehaviour
 {
     [Header("Speed Settings")]
     public float baseCameraSpeed;
+    public float jumpPowerupSpeed;
     public float playerMoveFactor;
-    public float ThresholdToMove = 7;
+    public float thresholdToMove = 7;
     public float speedScoreKoefficient = 100;
 
     float currentCameraSpeed;
     public float gameOverSlowdown = 0.1f;
+    float gameOverSpeed;
+    bool assignedGameOverSpeed;
+    public float cameraStandStillThreshold;
     public float resumeGameSpeedup = 1.3f;
     public float resumeGameBaseSpeedThreshold = 0.01f;
     public float resumeGameToPlayerPositionRegulationDistance = 0.5f;
@@ -39,55 +43,68 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
+
+        float threshold = screenHeight - (thresholdToMove * ps.playerHeight);
+
+
         if (PlayerScript.endGame)
         {
-            currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, 0, gameOverSlowdown * Time.deltaTime);
-        }
-        else if (PlayerScript.resumeGame)
-        {
-            playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
-
-            float threshold = screenHeight - (ThresholdToMove * ps.playerHeight);
-    
-            if (playerCameraVector.y >= threshold)
+            if (!assignedGameOverSpeed)
             {
-                overstepDistance = playerCameraVector.y - threshold;
-                currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed + (overstepDistance * playerMoveFactor), resumeGameSpeedup * Time.deltaTime);
-            }
-            else
-            {
-                currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed, resumeGameSpeedup * Time.deltaTime);
+                assignedGameOverSpeed = true;
+                gameOverSpeed = currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient;
             }
 
-            if (currentCameraSpeed >= baseCameraSpeed)
+
+            gameOverSpeed = Mathf.Lerp(gameOverSpeed, 0, gameOverSlowdown * Time.deltaTime);
+            if (gameOverSpeed <= cameraStandStillThreshold)
             {
-                PlayerScript.resumeGame = false;
-                Debug.Log($"Resume game: {PlayerScript.resumeGame}");
+                gameOverSpeed = 0;
             }
+
+            transform.position += new Vector3(0, gameOverSpeed, 0) * Time.deltaTime;
         }
         else
         {
-            playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
-
-            float threshold = screenHeight - (ThresholdToMove * ps.playerHeight);
-
-            if (ps.jumpPowerupActive != null && playerCameraVector.y >= threshold)
+            if (PlayerScript.resumeGame)
             {
-                overstepDistance = playerCameraVector.y - (threshold * ps.jumpPowerupBoost);
-                currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor * ps.jumpPowerupBoost);
-            }
-            else if (playerCameraVector.y >= threshold)
-            {
-                overstepDistance = playerCameraVector.y - threshold;
-                currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
+                if (playerCameraVector.y >= threshold)
+                {
+                    overstepDistance = playerCameraVector.y - threshold;
+                    currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed + (overstepDistance * playerMoveFactor), resumeGameSpeedup * Time.deltaTime);
+                }
+                else
+                {
+                    currentCameraSpeed = Mathf.Lerp(currentCameraSpeed, baseCameraSpeed, resumeGameSpeedup * Time.deltaTime);
+                }
+
+                if (currentCameraSpeed >= baseCameraSpeed)
+                {
+                    PlayerScript.resumeGame = false;
+                    Debug.Log($"Resume game: {PlayerScript.resumeGame}");
+                }
             }
             else
             {
-                currentCameraSpeed = baseCameraSpeed;
+                if (ps.jumpPowerupActive != null && playerCameraVector.y >= threshold)
+                {
+                    overstepDistance = playerCameraVector.y - threshold;
+                    currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor * jumpPowerupSpeed);
+                }
+                else if (playerCameraVector.y >= threshold)
+                {
+                    overstepDistance = playerCameraVector.y - threshold;
+                    currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
+                }
+                else
+                {
+                    currentCameraSpeed = baseCameraSpeed;
+                }
             }
+
+            transform.position += new Vector3(0, currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient, 0) * Time.deltaTime;
         }
 
-        transform.position += new Vector3(0, currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient, 0) * Time.deltaTime;
     }
-
 }

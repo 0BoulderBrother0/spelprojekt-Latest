@@ -8,6 +8,7 @@ public class GUIScript : MonoBehaviour
 {
     public static TextMeshProUGUI score;
     public static TextMeshProUGUI lose;
+    public static TextMeshProUGUI highscore;
     public static GUIScript instance;
 
     public static Image jumpPowerup;
@@ -30,6 +31,9 @@ public class GUIScript : MonoBehaviour
 
             if (child.CompareTag("LoseUI"))
                 lose = child.GetComponent<TextMeshProUGUI>();
+
+            if (child.CompareTag("HighscoreUI"))
+                highscore = child.GetComponent<TextMeshProUGUI>();
         }
     }
 

@@ -414,17 +414,18 @@ MonoBehaviour:
   towardsPlatformHelpBoost: 100
   moveSpeed: 6
   maxJumpHeight: 13.5
-  jumpToMaxJumpHeightKoefficient: 0.11
+  jumpToMaxJumpHeightKoefficient: 8
   airSpeedupKoefficient: 1.1
-  groundSlowdownKoefficient: 11
+  groundSlowdownKoefficient: 172
   loseAppearTime: 2
   SecondsBeforeDeath: 3
-  jumpPowerupActiveTime: 6
-  jumpPowerupBoost: 1.5
-  jumpPowerupBonusScore: 1
-  invincibilityPowerupActiveTime: 9
-  avoidScreenForceY: 1.1
-  avoidScreenForceX: 12
+  jumpPowerupActiveTime: 9
+  jumpPowerupBoost: 1.6
+  jumpPowerupBonusScore: 2
+  invincibilityPowerupActiveTime: 12
+  avoidScreenForceY: 0.17
+  avoidScreenToPlayerVectorForceIncrease: 0.6
+  avoidScreenForceX: 20
   goThroughGroundDuration: 1
   goThroughGroundThreshold: 0.13
 --- !u!1 &6633439441432527715

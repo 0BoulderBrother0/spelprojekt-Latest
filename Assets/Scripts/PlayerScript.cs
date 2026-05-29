@@ -32,6 +32,7 @@ public class PlayerScript : MonoBehaviour
     public float moveSpeed;
     public float maxJumpHeight;
     public float jumpToMaxJumpHeightKoefficient;
+    float originalJumpToMaxJumpHeightKoefficientValue;
     float jumpHeight;
     public float airSpeedupKoefficient;
     public float groundSlowdownKoefficient;
@@ -46,6 +47,7 @@ public class PlayerScript : MonoBehaviour
 
 
     [Header("Powerup")]
+    public float playerAlphaDecrease = 0.7f;
     public Coroutine jumpPowerupActive;
     Coroutine fadeIconJump;
     public float jumpPowerupActiveTime;
@@ -53,6 +55,7 @@ public class PlayerScript : MonoBehaviour
     public float jumpPowerupBoost;
     int jumpBonus = 0;
     public int jumpPowerupBonusScore = 1;
+    public float jumpToMaxJumpHeightKoefficientJumpPowerupBonus;
 
     public Coroutine invincibilityPowerupActive;
     Coroutine fadeIconInvincibility;
@@ -61,11 +64,14 @@ public class PlayerScript : MonoBehaviour
     public float invincibilityPowerupActiveTime;
     bool avoidScreenEdges;
     public float avoidScreenForceY;
-    public float avoidScreenToPlayerVectorForceIncrease;
     public float avoidScreenForceX;
     public float goThroughGroundDuration = 0.5f;
     public float goThroughGroundThreshold = 1;
 
+
+    Coroutine blinkPlayer;
+    public float blinkPlayerInterval = 0.1f;
+    public float blinkActivationRange = 0.03f;
 
     void Start()
     {
@@ -81,6 +87,8 @@ public class PlayerScript : MonoBehaviour
         towardsPlatformBoost = towardsPlatformHelpBoost;
 
         standStillThreshold = playerStandStillThreshold;
+
+        originalJumpToMaxJumpHeightKoefficientValue = jumpToMaxJumpHeightKoefficient;
     }
 
 
@@ -125,7 +133,13 @@ public class PlayerScript : MonoBehaviour
         {
             jumpHeight = Mathf.Lerp(jumpHeight, maxJumpHeight, jumpToMaxJumpHeightKoefficient * Time.deltaTime);
             sr.sprite = animations[1].sprite;
-        }          
+            if (blinkPlayer == null && jumpHeight >= maxJumpHeight - blinkActivationRange)
+            {
+                blinkPlayer = StartCoroutine(BlinkPlayer());
+                jumpHeight = maxJumpHeight;
+            }
+
+        }
 
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
         {
@@ -135,6 +149,16 @@ public class PlayerScript : MonoBehaviour
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
 
             jumpHeight = 0;
+
+            if (blinkPlayer != null)
+            {
+                StopCoroutine(blinkPlayer);
+                blinkPlayer = null;
+
+                Color c = sr.color;
+                c.a = 1f;
+                sr.color = c;
+            }
         }
 
 
@@ -179,7 +203,10 @@ public class PlayerScript : MonoBehaviour
                 insidePlatform = true;
 
                 if (PlatformHelpScript.restrictVelocity != null)
+                {
                     PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
+                    PlatformHelpScript.restrictVelocity = null;
+                }
             }
 
             if (pms.platformsColliders.Contains(collision.collider) && GroundCheckScript.isOnGround)
@@ -188,7 +215,7 @@ public class PlayerScript : MonoBehaviour
             }
             if (collision.collider.CompareTag("Ground"))
 
-            Debug.Log($"Colliding with: {collision.gameObject.name}, layer: {collision.gameObject.layer}");
+                Debug.Log($"Colliding with: {collision.gameObject.name}, layer: {collision.gameObject.layer}");
         }
     }
 
@@ -243,7 +270,11 @@ public class PlayerScript : MonoBehaviour
         PlatformHelpScript.instance.StopAllCoroutines();
         StopAllCoroutines();
 
+
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
+
+        GUIScript.highscore.text = $"Highscore: {nbrOfPlatforms}";
+        GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.highscore, loseAppearTime));
 
         Destroy(gameObject);
     }
@@ -284,6 +315,8 @@ public class PlayerScript : MonoBehaviour
 
         jumpBoost = jumpPowerupBoost;
         jumpBonus = jumpPowerupBonusScore;
+        jumpToMaxJumpHeightKoefficient = jumpToMaxJumpHeightKoefficientJumpPowerupBonus;
+
 
         Debug.Log("Activated jump powerup!");
 
@@ -292,6 +325,7 @@ public class PlayerScript : MonoBehaviour
         jumpPowerupActive = null;
         jumpBoost = 1;
         jumpBonus = 0;
+        jumpToMaxJumpHeightKoefficient = originalJumpToMaxJumpHeightKoefficientValue;
 
         Debug.Log("Disabled jump powerup");
     }
@@ -339,7 +373,16 @@ public class PlayerScript : MonoBehaviour
                     temporarilyIgnoreGround = StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));
 
                 if (PlatformHelpScript.restrictVelocity != null)
+                {
                     PlatformHelpScript.instance.StopCoroutine(PlatformHelpScript.restrictVelocity);
+                    PlatformHelpScript.restrictVelocity = null;
+                }
+
+                if (blinkPlayer != null)
+                {
+                    StopCoroutine(blinkPlayer);
+                    blinkPlayer = null;
+                }
             }
 
             if (Mathf.Abs(playerPos.x) + playerWidth >= camPos.x + CameraScript.screenWidth)
@@ -354,7 +397,8 @@ public class PlayerScript : MonoBehaviour
 
             if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
             {
-                rb.AddForceY(avoidScreenForceY + Mathf.Abs(camPos.y - CameraScript.screenHeight - playerPos.y - playerHeight) * avoidScreenToPlayerVectorForceIncrease, ForceMode2D.Force);
+                rb.linearVelocityY = 0;
+                rb.AddForceY(avoidScreenForceY, ForceMode2D.Impulse);
             }
 
 
@@ -370,7 +414,7 @@ public class PlayerScript : MonoBehaviour
 
 
         Color c = sr.color;
-        c.a = 0.7f;
+        c.a = playerAlphaDecrease;
         sr.color = c;
 
 
@@ -395,6 +439,27 @@ public class PlayerScript : MonoBehaviour
         Debug.Log("Stopped going through ground");
 
         Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, false);
+    }
+
+
+    IEnumerator BlinkPlayer()
+    {
+        Color c = sr.color;
+
+        while (true)
+        {
+            if (sr.color.a == 1)
+            {
+                c.a = playerAlphaDecrease;
+            }
+            else
+            {
+                c.a = 1;
+            }
+            sr.color = c;
+
+            yield return new WaitForSeconds(blinkPlayerInterval);
+        }
     }
 
 }
