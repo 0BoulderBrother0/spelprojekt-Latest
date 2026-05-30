@@ -9,6 +9,9 @@ public class PlatformHelpScript : MonoBehaviour
     public static Coroutine restrictVelocity;
     public static PlatformHelpScript instance;
 
+    float stuckTimer;
+    public float timeBeforeStuckBoost = 3;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,10 +19,22 @@ public class PlatformHelpScript : MonoBehaviour
         rb = GetComponentInParent<Rigidbody2D>();
     }
 
+    void Update()
+    {
+        if (leftTouching && rightTouching && Mathf.Abs(rb.linearVelocityY) <= PlayerScript.standStillThreshold)
+        {
+            stuckTimer += 1 * Time.deltaTime;
+            if (stuckTimer >= timeBeforeStuckBoost / CameraScript.progressionKoefficient)
+            {
+                rb.AddForceY(PlayerScript.platformBoost, ForceMode2D.Impulse);
+                stuckTimer = 0;
+            }
+        }
+    }
+
     void FixedUpdate()
     {
-        if (restrictVelocity == null) return;
-        if (PlayerScript.hasJumped) return;
+        if (restrictVelocity == null || PlayerScript.ignoreGround) return;
 
         if (rightTouching && rb.linearVelocityX < 0)
             rb.linearVelocityX = 0;
@@ -30,7 +45,7 @@ public class PlatformHelpScript : MonoBehaviour
 
     public void TriggerPlatformHelp()
     {
-        if (leftTouching != rightTouching && rb.linearVelocityY <= 0 && !PlayerScript.insidePlatform)
+        if (leftTouching != rightTouching && rb.linearVelocityY <= 0 && !PlayerScript.insidePlatform && !PlayerScript.ignoreGround)
         {
             if (leftTouching)
                 rb.AddForceX(-PlayerScript.towardsPlatformBoost);

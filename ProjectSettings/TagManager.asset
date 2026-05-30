@@ -15,6 +15,7 @@ TagManager:
   - InvincibilityPowerup
   - InvincibilityPowerupUI
   - HighscoreUI
+  - RetryUI
   layers:
   - Default
   - TransparentFX

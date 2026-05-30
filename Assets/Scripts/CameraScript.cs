@@ -9,6 +9,7 @@ public class CameraScript : MonoBehaviour
     public float playerMoveFactor;
     public float thresholdToMove = 7;
     public float speedScoreKoefficient = 100;
+    public static float progressionKoefficient;
 
     float currentCameraSpeed;
     public float gameOverSlowdown = 0.1f;
@@ -45,7 +46,9 @@ public class CameraScript : MonoBehaviour
     {
         playerCameraVector = ps.playerPos - new Vector2(transform.position.x, transform.position.y);
 
-        float threshold = screenHeight - (thresholdToMove * ps.playerHeight);
+        float threshold = screenHeight - (ps.playerHeight * thresholdToMove);
+
+        progressionKoefficient = Mathf.Max(1, PlayerScript.score / speedScoreKoefficient);
 
 
         if (PlayerScript.endGame)
@@ -53,11 +56,11 @@ public class CameraScript : MonoBehaviour
             if (!assignedGameOverSpeed)
             {
                 assignedGameOverSpeed = true;
-                gameOverSpeed = currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient;
+                gameOverSpeed = currentCameraSpeed + progressionKoefficient;
             }
 
 
-            gameOverSpeed = Mathf.Lerp(gameOverSpeed, 0, gameOverSlowdown * Time.deltaTime);
+            gameOverSpeed = Mathf.Lerp(gameOverSpeed, 0, gameOverSlowdown / progressionKoefficient * Time.deltaTime);
             if (gameOverSpeed <= cameraStandStillThreshold)
             {
                 gameOverSpeed = 0;
@@ -92,7 +95,7 @@ public class CameraScript : MonoBehaviour
                     overstepDistance = playerCameraVector.y - threshold;
                     currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor * jumpPowerupSpeed);
                 }
-                else if (playerCameraVector.y >= threshold)
+                else if (ps.temporarilyIgnoreGround == null && playerCameraVector.y >= threshold)
                 {
                     overstepDistance = playerCameraVector.y - threshold;
                     currentCameraSpeed = baseCameraSpeed + (overstepDistance * playerMoveFactor);
@@ -103,7 +106,7 @@ public class CameraScript : MonoBehaviour
                 }
             }
 
-            transform.position += new Vector3(0, currentCameraSpeed + PlayerScript.nbrOfPlatforms / speedScoreKoefficient, 0) * Time.deltaTime;
+            transform.position += new Vector3(0, currentCameraSpeed + progressionKoefficient, 0) * Time.deltaTime;
         }
 
     }

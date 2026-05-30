@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -9,9 +11,13 @@ public class PlayerScript : MonoBehaviour
     public SpriteRenderer[] animations;
     PlatformManagerScript pms;
     Collider2D currentPlatformCollider;
+    Collider2D pc;
     float[] currentPlatformDimensions;
     float xAxis;
-    public static int nbrOfPlatforms;
+    public static List<int> scores = new List<int>();
+    int highestScore;
+    public static int retries;
+    public static int score;
 
     [Header("Player")]
     public float playerHeight;
@@ -59,7 +65,7 @@ public class PlayerScript : MonoBehaviour
 
     public Coroutine invincibilityPowerupActive;
     Coroutine fadeIconInvincibility;
-    Coroutine temporarilyIgnoreGround;
+    public Coroutine temporarilyIgnoreGround;
     public static bool ignoreGround;
     public float invincibilityPowerupActiveTime;
     bool avoidScreenEdges;
@@ -78,6 +84,7 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         pms = GameObject.FindGameObjectWithTag("PlatformManager").GetComponent<PlatformManagerScript>();
+        pc = GetComponent<Collider2D>();
 
 
         playerHeight = sr.bounds.extents.y;
@@ -110,12 +117,13 @@ public class PlayerScript : MonoBehaviour
 
         if (GroundCheckScript.isOnGround && Mathf.Abs(rb.linearVelocityY) <= standStillThreshold && !ignoreGround)
         {
-            hasJumped = false;
+            if (!ignoreGround)
+                hasJumped = false;
 
             if (currentPlatformCollider != null)
             {
-                nbrOfPlatforms += 1 + jumpBonus;
-                GUIScript.score.text = $"Score: {nbrOfPlatforms}";
+                score += 1 + jumpBonus;
+                GUIScript.score.text = $"Score: {score}";
 
                 pms.platformsColliders.Remove(currentPlatformCollider);
                 currentPlatformCollider = null;
@@ -143,7 +151,8 @@ public class PlayerScript : MonoBehaviour
 
         if (Input.GetKeyUp(KeyCode.Space) && !hasJumped)
         {
-            hasJumped = true;
+            if (!ignoreGround)
+                hasJumped = true;
 
             rb.linearVelocityY = jumpHeight * jumpBoost;
             rb.AddForceX(xAxis * moveSpeed, ForceMode2D.Impulse);
@@ -213,9 +222,6 @@ public class PlayerScript : MonoBehaviour
             {
                 currentPlatformCollider = collision.collider;
             }
-            if (collision.collider.CompareTag("Ground"))
-
-                Debug.Log($"Colliding with: {collision.gameObject.name}, layer: {collision.gameObject.layer}");
         }
     }
 
@@ -273,8 +279,17 @@ public class PlayerScript : MonoBehaviour
 
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.lose, loseAppearTime));
 
-        GUIScript.highscore.text = $"Highscore: {nbrOfPlatforms}";
+        scores.Add(score);
+
+        foreach (int nbr in scores)
+        {
+            if (nbr > highestScore)
+                highestScore = nbr;
+        }
+        GUIScript.highscore.text = $"Highscore: {highestScore}";
         GUIScript.instance.StartCoroutine(GUIScript.ShowText(GUIScript.highscore, loseAppearTime));
+
+        GUIScript.instance.StartCoroutine(GUIScript.ShowImage(GUIScript.retry, loseAppearTime));
 
         Destroy(gameObject);
     }
@@ -370,7 +385,7 @@ public class PlayerScript : MonoBehaviour
             if (Mathf.Abs(playerPos.x) + playerWidth + goThroughGroundThreshold >= camPos.x + CameraScript.screenWidth || playerPos.y - playerHeight - goThroughGroundThreshold <= camPos.y - CameraScript.screenHeight)
             {
                 if (temporarilyIgnoreGround == null)
-                    temporarilyIgnoreGround = StartCoroutine(TemporarilyIgnoreGround(goThroughGroundDuration));
+                    temporarilyIgnoreGround = StartCoroutine(TemporarilyIgnoreGround());
 
                 if (PlatformHelpScript.restrictVelocity != null)
                 {
@@ -398,7 +413,7 @@ public class PlayerScript : MonoBehaviour
             if (playerPos.y - playerHeight <= camPos.y - CameraScript.screenHeight)
             {
                 rb.linearVelocityY = 0;
-                rb.AddForceY(avoidScreenForceY, ForceMode2D.Impulse);
+                rb.AddForceY(avoidScreenForceY * jumpBoost, ForceMode2D.Impulse);
             }
 
 
@@ -406,39 +421,28 @@ public class PlayerScript : MonoBehaviour
             yield return null;
         }
     }
-    IEnumerator TemporarilyIgnoreGround(float duration)
+    IEnumerator TemporarilyIgnoreGround()
     {
-        int playerLayer = gameObject.layer;
-        int groundLayer = LayerMask.NameToLayer("Ground");
-        Debug.Log($"Player layer: {playerLayer}, Ground layer: {groundLayer}");
-
-
         Color c = sr.color;
         c.a = playerAlphaDecrease;
         sr.color = c;
 
-
-        Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, true);
-        Debug.Log($"Ignoring collision between layers {playerLayer} and {groundLayer}");
-
         ignoreGround = true;
+        pc.enabled = false;
         hasJumped = true;
 
-        Debug.Log("Going through ground!");
+        score += 1 + jumpBonus;
+        GUIScript.score.text = $"Score: {score}";
 
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(goThroughGroundDuration * jumpBoost / CameraScript.progressionKoefficient);
 
-
+        pc.enabled = true;
         ignoreGround = false;
         temporarilyIgnoreGround = null;
-
 
         c.a = 1f;
         sr.color = c;
 
-        Debug.Log("Stopped going through ground");
-
-        Physics2D.IgnoreLayerCollision(playerLayer, groundLayer, false);
     }
 
 
